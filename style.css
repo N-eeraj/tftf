@@ -8,6 +8,14 @@
     border: 3px double black;
 }
 
+.text .current {
+    border-bottom: 5px solid red;
+}
+
+.text .completed {
+    opacity: 0.25;
+}
+
 .countdown {
     position: fixed;
     top: 50%;
