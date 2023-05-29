@@ -1,25 +1,19 @@
-import {
-    createBrowserRouter,
-    createRoutesFromElements,
-    Route
-} from 'react-router-dom'
-
-import DefaultLayout from '@layouts/Default'
+import { Routes, Route } from 'react-router-dom'
 
 import Home from '@pages/Home'
-import Practice from '@pages/race/Practice'
 import PVP from '@pages/race/PVP'
+import Practice from '@pages/race/Practice'
 
-const router = createBrowserRouter(
-    createRoutesFromElements(
-        <Route path='/' element={<DefaultLayout />}>
-            <Route index element={<Home />} />
-            <Route path='race/'>
-                <Route path='practice' element={<Practice />} />
-                <Route path='pvp' element={<PVP />} />
-            </Route>
-        </Route>
-    )
-)
+const Router = () => {
+  return (
+    <Routes>
+      <Route path='/'>
+        <Route index element={<Home />} />
+        <Route path='race' element={<PVP />} />
+        <Route path='practice' element={<Practice />} />
+      </Route>
+    </Routes>
+  )
+}
 
-export default router
+export default Router
