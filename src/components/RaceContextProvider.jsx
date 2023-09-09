@@ -9,11 +9,11 @@ const RaceContextProvider = ({ children }) => {
 
     const allValues = {
         text,
-        setText,
         typed,
-        setTyped,
         keysPressed,
-        setKeysPressed
+        setText,
+        setTyped,
+        setKeysPressed,
     }
 
     return (

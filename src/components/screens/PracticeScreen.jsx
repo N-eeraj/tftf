@@ -1,4 +1,4 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useContext, useEffect, useRef } from 'react'
 
 import Text from '@components/game/Text'
 import Button from '@components/base/button'
@@ -11,13 +11,18 @@ const PracticeScreen = () => {
 
     const [isPlaying, setIsPlaying] = useState(false)
     const [isIsLoadingText, setIsLoadingText] = useState(false)
+    const [timeElapsed, setTimeElapsed] = useState(0)
+
+    const startTime = useRef(0)
+    const stopWatch = useRef(null)
 
     const {
         text,
-        setText,
         typed,
+        keysPressed,
+        setText,
         setTyped,
-        setKeysPressed
+        setKeysPressed,
     } = useContext(RaceContext)
 
     const handlePlay = async () => {
@@ -34,6 +39,8 @@ const PracticeScreen = () => {
         finally {
             setIsLoadingText(false)
             setIsPlaying(true)
+            startTime.current = Date.now()
+            stopWatch.current = setInterval(() => setTimeElapsed(Date.now() - startTime.current), 100)
         }
     }
 
@@ -46,21 +53,54 @@ const PracticeScreen = () => {
             setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
     }
 
+    const clearEvents = () => {
+        clearInterval(stopWatch.current)
+        document.removeEventListener('keypress', handleKeyPress)
+    }
+
     useEffect(() => {
         if (isPlaying)
             document.addEventListener('keypress', handleKeyPress)
-        else
-            document.removeEventListener('keypress', handleKeyPress)
+
         return () => {
             document.removeEventListener('keypress', handleKeyPress)
         }
     }, [isPlaying, typed])
 
+    useEffect(() => {
+        if (typed === text.length) clearEvents()
+    }, [keysPressed])
+
+    useEffect(() => clearEvents, [])
+
+    const correct = keysPressed.filter(correct => correct).length || 0
+    const accuracy = (correct * 100 / keysPressed.length || 0).toFixed(2)
+    const wpm = Math.round(correct / (timeElapsed / 12000) || 0)
+
     return (
         <section className='grid place-items-center h-full'>
             {
                 isPlaying ?
-                <Text />:
+                <>
+                    <div className='flex gap-x-1'>
+                        <span>
+                            Accuracy:
+                        </span>
+                        <strong>
+                            {accuracy} %
+                        </strong>
+                    </div>
+                    <div className='flex gap-x-1'>
+                        <span>
+                            Speed:
+                        </span>
+                        <strong>
+                            {wpm} WPM
+                        </strong>
+                    </div>
+
+                    <Text />
+                </> :
                 <Button loading={isIsLoadingText} className='bg-primary text-white' onClick={handlePlay}>
                     Start Session
                 </Button>
