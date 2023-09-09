@@ -1,4 +1,4 @@
-const Home = () => {
+const PVP = () => {
     return (
         <>
         PVP
@@ -6,4 +6,4 @@ const Home = () => {
     )
 }
 
-export default Home
+export default PVP

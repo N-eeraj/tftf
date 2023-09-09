@@ -1,9 +1,12 @@
-const Home = () => {
+import PracticeScreen from "@components/screens/PracticeScreen"
+import RaceContextProvider from '@components/RaceContextProvider'
+
+const Practice = () => {
     return (
-        <>
-        Practice
-        </>
+        <RaceContextProvider>
+            <PracticeScreen />
+        </RaceContextProvider>
     )
 }
 
-export default Home
+export default Practice
