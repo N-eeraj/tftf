@@ -125,14 +125,14 @@ const PracticeScreen = () => {
                         </div> :
 
                         <Button className='col-span-2 text-primary border-2 border-primary' onClick={handleRestart}>
-                            Type Again
+                            Restart Practice
                         </Button>
                     }
 
                 </> :
 
                 <Button loading={isIsLoadingText} className='col-span-2 bg-primary text-white' onClick={handlePlay}>
-                    Start Session
+                    Start Practice
                 </Button>
             }
         </section>
