@@ -15,6 +15,10 @@ const PracticeScreen = () => {
     const [timeElapsed, setTimeElapsed] = useState(0)
     const [countDown, setCountdown] = useState(false)
 
+    const sessionProgress = useRef({
+        wpm: 0,
+        length: 100
+    })
     const startTime = useRef(0)
     const stopWatch = useRef(null)
 
@@ -29,7 +33,10 @@ const PracticeScreen = () => {
 
     const handlePlay = async () => {
         setIsLoadingText(true)
-        const content = await getText(signal)
+        const content = await getText(signal, {
+            minLength: sessionProgress.current.length,
+            maxLength: sessionProgress.current.length + 25
+        })
         setText(content)
         setIsLoadingText(false)
         setIsPlaying(true)
@@ -41,6 +48,20 @@ const PracticeScreen = () => {
     }
 
     const handleRestart = () => {
+        const improvement = wpm - sessionProgress.current.wpm
+        if (!sessionProgress.current.wpm && improvement > 3)
+            sessionProgress.current.length += 50
+        else if (improvement > 3)
+            sessionProgress.current.length += 25
+        else if (improvement < -5)
+            sessionProgress.current.length -= 25
+
+        if (sessionProgress.current.length > 500)
+            sessionProgress.current.length = 500
+        else if (sessionProgress.current.length < 50)
+            sessionProgress.current.length = 50
+
+        sessionProgress.current.wpm = wpm
         startTime.current = 0
         setIsPlaying(false)
         setTimeElapsed(0)
