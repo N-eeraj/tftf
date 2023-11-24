@@ -145,14 +145,14 @@ const PracticeScreen = () => {
                             <div className='h-full bg-primary font-bold' style={{width: `${completion}%`}} />
                         </div> :
 
-                        <Button className='col-span-2 text-primary border-2 border-primary' onClick={handleRestart}>
+                        <Button autoFocus className='col-span-2 text-primary border-2 border-primary' onClick={handleRestart}>
                             Restart Practice
                         </Button>
                     }
 
                 </> :
 
-                <Button loading={isIsLoadingText} className='col-span-2 bg-primary text-white' onClick={handlePlay}>
+                <Button loading={isIsLoadingText} autoFocus className='col-span-2 bg-primary text-white' onClick={handlePlay}>
                     Start Practice
                 </Button>
             }
