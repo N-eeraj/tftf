@@ -2,7 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react'
 
 import { RaceContext } from '@components/RaceContextProvider'
 
-const Text = ({wait, timeout, countDown, onCountDownComplete, className}) => {
+const Text = ({wait, timeout, countDown, capsOn, onCountDownComplete, className}) => {
     const [timeLeft, setTimeLeft] = useState(timeout)
     const interval = useRef(null)
 
@@ -44,6 +44,9 @@ const Text = ({wait, timeout, countDown, onCountDownComplete, className}) => {
 
     return (
         <div className={`relative py-5 px-10 border-8 border-primary rounded-md ${className}`}>
+            {
+                capsOn && <span className='absolute -top-5 left-5 bg-red-500 text-white text-xl'>CapsLock is on</span>
+            }
             {
                 text.split('').map((letter, index) => <span className={`text-2xl font-mono duration-200 ${wait ? 'blur-md' : undefined} ${letterClass(index)}`} key={index}>{letter}</span>)
             }

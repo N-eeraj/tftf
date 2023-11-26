@@ -1,7 +1,7 @@
 {
   "name": "type-fast-type-furious",
   "private": true,
-  "version": "1.0.03",
+  "version": "1.0.04",
   "type": "module",
   "scripts": {
     "dev": "vite",

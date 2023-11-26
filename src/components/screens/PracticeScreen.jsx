@@ -14,6 +14,7 @@ const PracticeScreen = () => {
     const [isIsLoadingText, setIsLoadingText] = useState(false)
     const [timeElapsed, setTimeElapsed] = useState(0)
     const [countDown, setCountdown] = useState(false)
+    const [capsOn, setCapsOn] = useState(false)
 
     const sessionProgress = useRef({
         wpm: 0,
@@ -71,10 +72,12 @@ const PracticeScreen = () => {
         handlePlay()
     }
 
-    const handleKeyPress = ({ key }) => {
+    const handleKeyPress = (event) => {
         if (!startTime.current) return
 
-        if (key === text[typed]) {
+        setCapsOn(event.getModifierState("CapsLock"))
+
+        if (event.key === text[typed]) {
             setTyped(prevTyped => ++prevTyped)
             setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
         }
@@ -134,7 +137,7 @@ const PracticeScreen = () => {
                         </strong>
                     </div>
 
-                    <Text wait={!startTime.current} countDown={countDown} timeout={3} className='col-span-2 w-3/4 min-w-[720px] max-w- [1080px] min-h-[240px]' onCountDownComplete={() => setCountdown(false)} />
+                    <Text wait={!startTime.current} countDown={countDown} timeout={3} capsOn={capsOn} className='col-span-2 w-3/4 min-w-[720px] max-w- [1080px] min-h-[240px]' onCountDownComplete={() => setCountdown(false)} />
                     
                     {
                         completion < 100 ?
