@@ -1,9 +1,9 @@
 const PVP = () => {
-    return (
-        <>
-        PVP
-        </>
-    )
+  return (
+    <>
+      PVP
+    </>
+  )
 }
 
 export default PVP
