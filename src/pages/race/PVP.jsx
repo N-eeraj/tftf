@@ -4,27 +4,33 @@ import Button from '@components/base/button'
 import { useRef } from 'react'
 
 const PVP = () => {
-  const { peerId, host, connect, serverConnection } = usePeer()
+  const { peerId, host, connect, hostConnection, clientConnection, connections } = usePeer()
 
   const hostIdInput = useRef('')
 
   const handleJoin = event => {
     event.preventDefault()
-    connect(hostIdInput.current.value)
+    if (hostIdInput.current.value) {
+      connect(hostIdInput.current.value)
+    }
   }
 
   return (
     <>
       {
         peerId ?
-          peerId :
           <>
-            <Button loading={serverConnection} className='col-span-2 bg-primary text-white' onClick={host}>
+            {peerId}
+            <br />
+            {JSON.stringify(connections)}
+          </> :
+          <>
+            <Button loading={hostConnection} className='col-span-2 bg-primary text-white' onClick={host}>
               Host
             </Button>
             <form onSubmit={handleJoin}>
-              <input type="text" ref={hostIdInput} />
-              <Button loading={serverConnection} className='col-span-2 bg-primary text-white'>
+              <input ref={hostIdInput} required />
+              <Button loading={clientConnection} className='col-span-2 bg-primary text-white'>
                 Join
               </Button>
             </form>
