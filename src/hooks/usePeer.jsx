@@ -5,11 +5,13 @@ const usePeer = () => {
   const peer = useRef(null)
   const connectionList = useRef([])
   const isHost = useRef(false)
+  const connectionStopped = useRef(false)
 
   const [peerId, setPeerId] = useState()
   const [hostConnection, setHostConnection] = useState(false)
   const [clientConnection, setClientConnection] = useState(false)
   const [connections, setConnections] = useState([])
+  const [mainData, setMainData] = useState(null)
 
   // creates a peer object
   const createPeer = callback => {
@@ -31,6 +33,10 @@ const usePeer = () => {
     }
     createPeer(handleHostConnection)
     peer.current.on('connection', connection => {
+      if (connectionStopped.current) {
+        connection.close()
+        return
+      }
       connectionList.current.push(connection)
       // update connections list
       setConnections(_connections => {
@@ -71,10 +77,22 @@ const usePeer = () => {
       case 'connection':
         setConnections(data)
         break
+      case 'text':
+        setMainData(data)
+        break
       default:
         console.error(`Invalid data type ${type}`)
     }
   })
+
+  const stopConnections = data => {
+    connectionStopped.current = true
+    setMainData(data)
+    sendMessage({
+      type: 'text',
+      data,
+    })
+  }
 
   useEffect(() => {
     if (connections.length < 2 || !isHost.current) return
@@ -86,15 +104,17 @@ const usePeer = () => {
       })
     }, 400)
   }, [connections])
-  
+
 
   return {
     peerId,
     host,
     connect,
+    isHost,
     hostConnection,
     clientConnection,
-    connections,
+    stopConnections,
+    mainData,
   }
 }
 

@@ -1,4 +1,4 @@
-import PracticeScreen from "@components/screens/PracticeScreen"
+import PracticeScreen from '@components/screens/PracticeScreen'
 import RaceContextProvider from '@components/RaceContextProvider'
 
 const Practice = () => {
