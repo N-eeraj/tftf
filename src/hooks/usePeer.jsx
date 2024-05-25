@@ -4,7 +4,7 @@ import { useState, useRef, useEffect } from 'react'
 const usePeer = () => {
   const peer = useRef(null)
   const connectionList = useRef([])
-  const isClient = useRef(true)
+  const isHost = useRef(false)
 
   const [peerId, setPeerId] = useState()
   const [hostConnection, setHostConnection] = useState(false)
@@ -23,7 +23,7 @@ const usePeer = () => {
 
   // initiate host
   const host = () => {
-    isClient.current = false
+    isHost.current = true
     setHostConnection(true)
     const handleHostConnection = hostId => {
       setHostConnection(false)
@@ -59,17 +59,17 @@ const usePeer = () => {
     createPeer(() => connectToPeer(hostId))
   }
 
-  const sendMessage = message => connectionList.current.forEach(connection => connection.send(message))
+  const sendMessage = (message, from = peerId) => connectionList.current.forEach(connection => {
+    if (from !== connection.peer)
+      connection.send({ from, ...message })
+  })
 
-  const handleMessage = connection => connection?.on('data', ({ type, data }) => {
+  const handleMessage = connection => connection?.on('data', ({ type, from, data }) => {
+    if (isHost.current)
+      sendMessage({ type, data }, from)
     switch (type) {
       case 'connection':
         setConnections(data)
-        data.forEach(peerId => {
-          if (!connectionList.current.map(({ peer }) => peer).includes(peerId) && peerId !== peer.current.id) {
-            connectToPeer(peerId)
-          }
-        })
         break
       default:
         console.error(`Invalid data type ${type}`)
@@ -77,7 +77,7 @@ const usePeer = () => {
   })
 
   useEffect(() => {
-    if (connections.length < 2 || isClient.current) return
+    if (connections.length < 2 || !isHost.current) return
     // delay to establish connection
     setTimeout(() => {
       sendMessage({
