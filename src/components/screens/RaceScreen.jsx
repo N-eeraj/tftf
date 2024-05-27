@@ -1,14 +1,21 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 
 import Button from '@components/base/button'
 
 import getText from '@utils/getText'
 
-const RaceScreen = ({ isHost, onStart, text }) => {
+const RaceScreen = ({ isHost, onStart, text, onKeyPress }) => {
   const controller = new AbortController()
   const signal = controller.signal
 
   const [loading, setLoading] = useState(false)
+  const progress = useRef(0)
+
+  const handleKeyPress = (event) => {
+    if (event.key === text[progress.current]) {
+      onKeyPress(++progress.current)
+    }
+  }
 
   const handlePlay = async () => {
     setLoading(true)
@@ -20,8 +27,10 @@ const RaceScreen = ({ isHost, onStart, text }) => {
   }
 
   useEffect(() => {
-    if (text)
+    if (text) {
       setLoading(false)
+      document.addEventListener('keypress', handleKeyPress)
+    }
   }, [text])
 
   useEffect(() => {

@@ -11,7 +11,10 @@ const usePeer = () => {
   const [hostConnection, setHostConnection] = useState(false)
   const [clientConnection, setClientConnection] = useState(false)
   const [connections, setConnections] = useState([])
-  const [mainData, setMainData] = useState(null)
+  const [mainData, setMainData] = useState({
+    start: 0,
+    data: null,
+  })
 
   // creates a peer object
   const createPeer = callback => {
@@ -78,7 +81,13 @@ const usePeer = () => {
         setConnections(data)
         break
       case 'text':
-        setMainData(data)
+        setMainData({
+          start: Date.now(),
+          data,
+        })
+        break
+      case 'progress':
+        console.log(data)
         break
       default:
         console.error(`Invalid data type ${type}`)
@@ -87,10 +96,23 @@ const usePeer = () => {
 
   const stopConnections = data => {
     connectionStopped.current = true
-    setMainData(data)
+    setMainData({
+      start: Date.now(),
+      data,
+    })
     sendMessage({
       type: 'text',
       data,
+    })
+  }
+
+  const updateProgress = text => {
+    sendMessage({
+      type: 'progress',
+      data: {
+        lastUpdated: Date.now() - mainData.start,
+        text
+      },
     })
   }
 
@@ -115,6 +137,7 @@ const usePeer = () => {
     clientConnection,
     stopConnections,
     mainData,
+    updateProgress,
   }
 }
 
