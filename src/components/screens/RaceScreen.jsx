@@ -15,6 +15,7 @@ const RaceScreen = ({ isHost, onStart, text, onKeyPress }) => {
     if (event.key === text[progress.current]) {
       onKeyPress(++progress.current)
     }
+    event.preventDefault()
   }
 
   const handlePlay = async () => {

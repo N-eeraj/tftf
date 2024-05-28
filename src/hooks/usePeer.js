@@ -1,5 +1,5 @@
 import { Peer } from 'peerjs'
-import { useState, useRef, useEffect } from 'react'
+import { useState, useRef, useEffect, useReducer } from 'react'
 
 const usePeer = () => {
   const peer = useRef(null)
@@ -10,11 +10,33 @@ const usePeer = () => {
   const [peerId, setPeerId] = useState()
   const [hostConnection, setHostConnection] = useState(false)
   const [clientConnection, setClientConnection] = useState(false)
-  const [connections, setConnections] = useState([])
   const [mainData, setMainData] = useState({
     start: 0,
     data: null,
   })
+
+  const conntectionUpdate = (state, { type, data }) => {
+    switch(type) {
+      case 'replace':
+        return data
+      case 'new':
+        return {
+          ...state,
+          [data]: {
+            lastUpdated: 0,
+            text: 0,
+          }
+        }
+      case 'progress':
+        return {
+          ...state,
+          [data.from]: data.data
+        }
+      default:
+        console.error(`Invalid data type ${type}`)
+    }
+  }
+  const [connections, setConnections] = useReducer(conntectionUpdate, {})
 
   // creates a peer object
   const createPeer = callback => {
@@ -32,7 +54,15 @@ const usePeer = () => {
     setHostConnection(true)
     const handleHostConnection = hostId => {
       setHostConnection(false)
-      setConnections([ hostId ])
+      setConnections({
+        type: 'replace',
+        data: {
+          [hostId]: {
+            lastUpdated: 0,
+            text: 0,
+          }
+        },
+      })
     }
     createPeer(handleHostConnection)
     peer.current.on('connection', connection => {
@@ -42,11 +72,9 @@ const usePeer = () => {
       }
       connectionList.current.push(connection)
       // update connections list
-      setConnections(_connections => {
-        return [ 
-          ..._connections,
-          connection.peer,
-        ]
+      setConnections({
+        type: 'new',
+        data: connection.peer,
       })
       handleMessage(connection)
     })
@@ -78,7 +106,10 @@ const usePeer = () => {
       sendMessage({ type, data }, from)
     switch (type) {
       case 'connection':
-        setConnections(data)
+        setConnections({
+          type: 'replace',
+          data,
+        })
         break
       case 'text':
         setMainData({
@@ -87,7 +118,10 @@ const usePeer = () => {
         })
         break
       case 'progress':
-        console.log(data)
+        setConnections({
+          type: 'progress',
+          data: { from, data }
+        })
         break
       default:
         console.error(`Invalid data type ${type}`)
@@ -117,7 +151,7 @@ const usePeer = () => {
   }
 
   useEffect(() => {
-    if (connections.length < 2 || !isHost.current) return
+    if (Object.keys(connections).length < 2 || !isHost.current) return
     // delay to establish connection
     setTimeout(() => {
       sendMessage({
@@ -135,6 +169,7 @@ const usePeer = () => {
     isHost,
     hostConnection,
     clientConnection,
+    connections,
     stopConnections,
     mainData,
     updateProgress,

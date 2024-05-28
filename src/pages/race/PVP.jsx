@@ -4,7 +4,7 @@ import Button from '@components/base/button'
 import { useRef } from 'react'
 
 const PVP = () => {
-  const { peerId, host, connect, isHost, hostConnection, clientConnection, stopConnections, mainData, updateProgress } = usePeer()
+  const { peerId, host, connect, isHost, hostConnection, clientConnection, connections, stopConnections, mainData, updateProgress } = usePeer()
 
   const hostIdInput = useRef('')
 
@@ -20,6 +20,8 @@ const PVP = () => {
       {
         peerId ?
           <>
+            { JSON.stringify(connections) }
+            <br />
             {isHost.current && !mainData.data ? `Join with ${peerId}` : ''}
             <RaceScreen isHost={isHost.current} onStart={text => stopConnections(text)} text={mainData.data} onKeyPress={updateProgress} />
           </> :
