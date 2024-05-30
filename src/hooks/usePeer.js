@@ -15,7 +15,7 @@ const usePeer = () => {
     data: null,
   })
 
-  const conntectionUpdate = (state, { type, data }) => {
+  const connectionUpdate = (state, { type, data }) => {
     switch(type) {
       case 'replace':
         return data
@@ -33,10 +33,10 @@ const usePeer = () => {
           [data.from]: data.data
         }
       default:
-        console.error(`Invalid data type ${type}`)
+        return state
     }
   }
-  const [connections, setConnections] = useReducer(conntectionUpdate, {})
+  const [connections, setConnections] = useReducer(connectionUpdate, {})
 
   // creates a peer object
   const createPeer = callback => {
@@ -143,7 +143,7 @@ const usePeer = () => {
   const updateProgress = text => {
     const data = {
       lastUpdated: Date.now() - mainData.start,
-      text: text * 100 / mainData.data.length,
+      progress: text * 100 / mainData.data.length,
     }
     setConnections({
       type: 'progress',
