@@ -7,7 +7,19 @@ const PVP = () => {
 
   return (
     <>
-      { Object.keys(connections).length ? <div className='border-2 border-primary'> {JSON.stringify(connections)} </div> : '' }
+      {
+        Object.keys(connections).length ?
+          Object.entries(connections).map(([connection, { progress }]) => 
+            <div className='flex mt-1 gap-x-2' key={connection}>
+              <div className='w-fit'>
+                {connection}
+              </div>
+              <div className='flex-1 bg-primary/20'>
+                <div className='h-full bg-primary duration-300' style={{width: `${progress}%`}} />
+              </div>
+            </div>) :
+          ''
+      }
       {
         mainData.data ?
           <RaceScreen isHost={isHost.current} onStart={text => stopConnections(text)} text={mainData.data} onKeyPress={updateProgress} /> :

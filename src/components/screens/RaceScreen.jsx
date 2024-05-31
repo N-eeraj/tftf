@@ -16,15 +16,18 @@ const RaceScreen = ({ text, onKeyPress }) => {
     }
   }, [text])
 
-  useEffect(() => {
-    return () => {
-      controller.abort()
-    }
-  }, [])
+  const textclass = index => {
+    if (index === progress.current)
+      return 'bg-primary text-white'
+    if (index < progress.current)
+    return 'opacity-25'
+  }
 
   return (
-    <section className='grid grid-cols-2 place-items-center h-full'>
-      {text}
+    <section className='p-5'>
+      {
+        text.split('').map((letter, index) => <span className={`p-[1px] font-mono ${textclass(index)}`} key={index}>{letter}</span>)
+      }
     </section>
   )
 }

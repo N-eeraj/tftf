@@ -15,13 +15,13 @@ const usePeer = () => {
     data: null,
   })
 
-  const connectionUpdate = (state, { type, data }) => {
+  const connectionUpdate = (connections, { type, data }) => {
     switch(type) {
       case 'replace':
         return data
       case 'new':
         return {
-          ...state,
+          ...connections,
           [data]: {
             lastUpdated: 0,
             progress: 0,
@@ -29,11 +29,12 @@ const usePeer = () => {
         }
       case 'progress':
         return {
-          ...state,
+          ...connections,
           [data.from]: data.data
         }
       default:
-        return state
+        console.warn(`Invalid connection update type: ${type}`)
+        return connections
     }
   }
   const [connections, setConnections] = useReducer(connectionUpdate, {})
