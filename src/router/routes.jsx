@@ -9,18 +9,18 @@ const routes = [
     path: '/',
     element: <DefaultLayout />,
     children: [
-    {
+      {
         path: '',
         element: <Home />
-    },
-    {
+      },
+      {
         path: 'race',
         element: <PVP />
-    },
-    {
+      },
+      {
         path: 'practice',
         element: <Practice />
-    }
+      }
     ]
   },
   {
