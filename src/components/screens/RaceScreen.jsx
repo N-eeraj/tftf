@@ -41,14 +41,12 @@ const RaceScreen = ({ text, onKeyPress }) => {
   }
 
   return (
-    <div className="relative py-5 px-10 border-8 border-primary rounded-md">
-      {
-        capsOn && <span className='absolute -top-5 left-5 bg-red-500 text-white text-xl'>CapsLock is on</span>
-      }
-      {
-        text.split('').map((letter, index) => <span className={`text-2xl font-mono ${letterClass(index)}`} key={index}>{letter}</span>)
-      }
-    </div>
+    <>
+      <div className='relative py-5 px-10 border-8 border-primary rounded-md'>
+        { capsOn && <span className='absolute -top-5 left-5 bg-red-500 text-white text-xl'>CapsLock is on</span> }
+        { text.split('').map((letter, index) => <span className={`text-2xl font-mono ${letterClass(index)}`} key={index}>{letter}</span>) }
+      </div>
+    </>
   )
 }
 

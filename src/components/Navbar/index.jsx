@@ -5,7 +5,7 @@ import NavItem from "@components/Navbar/NavItem"
 const Navbar = () => {
   return (
     <nav className='fixed top-0 flex justify-between items-baseline w-screen h-24 py-3 md:py-5 px-3 md:px-10 backdrop-blur-sm'>
-      <h1 className="text-2xl md:text-4xl font-black">
+      <h1 className='text-2xl md:text-4xl font-black'>
         <Link to='/'>
           TFTF
         </Link>

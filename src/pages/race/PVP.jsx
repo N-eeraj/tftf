@@ -1,31 +1,21 @@
 import usePeer from '@hooks/usePeer'
 import RaceScreen from '@components/screens/RaceScreen'
 import Organize from '@components/game/organize'
+import Canvas from '@components/game/Canvas'
 
 const PVP = () => {
   const { peerId, host, connect, isHost, hostConnection, clientConnection, connections, stopConnections, mainData, updateProgress } = usePeer()
 
   return (
-    <>
-      {
-        Object.keys(connections).length ?
-          Object.entries(connections).map(([connection, { progress }]) => 
-            <div className='flex mt-1 gap-x-2' key={connection}>
-              <div className='w-fit'>
-                {connection}
-              </div>
-              <div className='flex-1 bg-primary/20'>
-                <div className='h-full bg-primary duration-300' style={{width: `${progress}%`}} />
-              </div>
-            </div>) :
-          ''
-      }
+    <div className='flex flex-col gap-y-5 p-5'>
+      { !!Object.keys(connections).length && <Canvas connections={connections} /> }
+
       {
         mainData.data ?
-          <RaceScreen isHost={isHost.current} onStart={text => stopConnections(text)} text={mainData.data} onKeyPress={updateProgress} /> :
+          <RaceScreen isHost={isHost.current} connections={connections} onStart={text => stopConnections(text)} text={mainData.data} onKeyPress={updateProgress} /> :
           <Organize hostConnection={hostConnection} clientConnection={clientConnection} peerId={peerId} isHost={isHost.current} onHost={host} onJoin={hostId => connect(hostId)} onStart={text => stopConnections(text)} />
       }
-    </>
+    </div>
   )
 }
 
