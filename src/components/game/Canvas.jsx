@@ -13,12 +13,13 @@ const Canvas = ({ peerId, connections }) => {
   const road = useRef()
 
   const animate = useCallback(() => {
-    drawTrack()
+    canvasDraw()
     requestAnimationFrame(animate)
   }, [])
 
-  const drawTrack = () => {
+  const canvasDraw = () => {
     ctx.current.drawImage(road.current, 0, 0, 120, 240, 0, 0, canvas.current.width * 4, canvas.current.height)
+    ctx.current.drawImage(cars.current, 0, carIndex.current * 200, 383, 200, 0, carIndex.current * 200 + canvas.current.height * 0.2, canvas.current.width * 0.1, (canvas.current.height / Object.keys(connections).length) * 0.6)
   }
 
   useEffect(() => {
