@@ -25,6 +25,7 @@ const usePeer = () => {
           [data]: {
             lastUpdated: 0,
             progress: 0,
+            index: Object.keys(connections).length,
           }
         }
       case 'progress':
@@ -61,6 +62,7 @@ const usePeer = () => {
           [hostId]: {
             lastUpdated: 0,
             progress: 0,
+            index: 0,
           }
         },
       })
@@ -144,7 +146,7 @@ const usePeer = () => {
   const updateProgress = text => {
     const data = {
       lastUpdated: Date.now() - mainData.start,
-      progress: text * 100 / mainData.data.length,
+      progress: text / mainData.data.length,
     }
     setConnections({
       type: 'progress',
