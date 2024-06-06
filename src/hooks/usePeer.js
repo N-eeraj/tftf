@@ -147,6 +147,7 @@ const usePeer = () => {
     const data = {
       lastUpdated: Date.now() - mainData.start,
       progress: text / mainData.data.length,
+      index: connections[peerId].index,
     }
     setConnections({
       type: 'progress',

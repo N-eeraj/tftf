@@ -19,8 +19,8 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
   const handlePlay = async () => {
     setLoading(true)
     const content = await getText(signal, {
-      minLength: 100,
-      maxLength: 125
+      minLength: 150,
+      maxLength: 200
     })
     onStart(content)
   }
