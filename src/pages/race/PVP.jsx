@@ -8,7 +8,7 @@ const PVP = () => {
 
   return (
     <div className='flex flex-col gap-y-5 p-5'>
-      { peerId && <Canvas peerId={peerId} connections={connections} /> }
+      { peerId && <Canvas peerId={peerId} connections={connections} started={!!mainData.data} /> }
 
       {
         mainData.data ?
