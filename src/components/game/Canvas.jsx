@@ -1,61 +1,68 @@
 import { useEffect, useRef } from 'react'
 
 import carsImage from '@images/cars.png'
-import finishImage from '@images/finish.png'
 
 const Canvas = ({ peerId, connections, started }) => {
+  const dashesConfig = {
+    width: 50,
+    height: 5,
+    count: 7,
+    speed: 3,
+  }
+
   const canvas = useRef()
-  const lineUp = useRef()
+  const lineUp = useRef([])
   const counter = useRef(0)
-  const tracks = useRef(Array.from({ length: 5 }).map((_, i) => i * 100))
+  const dashes = useRef(Array.from({ length: dashesConfig.count }).map((_, i) => i * 100))
 
-  // image references
+  // image reference
   const cars = useRef()
-  const finish = useRef()
-
+  
   const canvasDraw = (ctx) => {
+    const trackHeight = canvas.current?.height / lineUp.current.length
+    
     ctx.clearRect(0, 0, canvas.current.width, canvas.current.height)
     ctx.fillStyle = '#2E2E2E'
     ctx.fillRect(0, 0, canvas.current.width, canvas.current.height)
+
     lineUp.current?.forEach(({ key, index, progress, carPosition }, lineUpIndex) => {
-      const trackHeight = canvas.current.height / lineUp.current.length
       ctx.fillStyle = '#EEE'
 
-      tracks.current.forEach((progress, trackIndex) => {
-        ctx.fillRect(progress, trackHeight * (index + 0.5) - 15, 50, 30)
+      dashes.current.forEach((progress, trackIndex) => {
+        ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
         if (started)
-          tracks.current[trackIndex] -= 2
-        if (tracks.current[0] < 0) {
-          if (tracks.current.length < 5)
-            tracks.current.push(tracks.current[tracks.current.length - 1] + 100)
-          if (tracks.current[0] < -50)
-            tracks.current.shift()
+          dashes.current[trackIndex] -= dashesConfig.speed
+        if (dashes.current[0] < 0) {
+          if (dashes.current.length < dashesConfig.count)
+            dashes.current.push(dashes.current[dashes.current.length - 1] + 100)
+          if (dashes.current[0] < -dashesConfig.width)
+            dashes.current.shift()
         }
       })
 
-      // const finishWidth = 10
-      // ctx.drawImage(finish.current, canvas.current.width - finishWidth, trackHeight * index, finishWidth, trackHeight)
       const sx = 0
       const sy = 2258.25 * index
       const sWidth = cars.current.width
       const sHeight = cars.current.height / 8
       const dHeight = trackHeight * 0.75
-      const dWidth = dHeight * 0.15
+      const dWidth = dHeight * 1.913
       const dx = carPosition
-      if (started) {
-        if (!progress && carPosition < canvas.current.width * 0.05)
-          lineUp.current[lineUpIndex].carPosition += 1
-        if (progress > 0.1 && progress < 0.9 && carPosition < canvas.current.width * +progress.toFixed(1) - dWidth)
-          lineUp.current[lineUpIndex].carPosition += 0.5
-      }
       const dy = trackHeight * (index + 0.125)
       ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+      if (started) {
+        if (!progress && carPosition < canvas.current.width * 0.05) {
+          lineUp.current[lineUpIndex].carPosition += 1
+        }
+        else if (progress > 0 && progress < 1 && carPosition < canvas.current.width * +progress.toFixed(1) - dWidth) {
+          lineUp.current[lineUpIndex].carPosition += 0.5
+        }
+      }
     })
   }
 
   useEffect(() => {
-    canvas.current.height = Object.keys(connections).length * 300
-    canvas.current.style.height = `${Object.keys(connections).length * 100}px`
+    canvas.current.height = Object.keys(connections).length * 40
+    canvas.current.width = 600
     lineUp.current = Object.entries(connections).reduce((sorted, [key, { index, ...progress }], connectionsIndex) => {
       let carPosition = 0
       if (lineUp.current)
@@ -95,7 +102,6 @@ const Canvas = ({ peerId, connections, started }) => {
       <canvas ref={canvas} className='w-full border border-black' />
       <div className='hidden'>
         <img ref={cars} src={carsImage} />
-        <img ref={finish} src={finishImage} />
       </div>
     </>
   )
