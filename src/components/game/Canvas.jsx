@@ -40,21 +40,28 @@ const Canvas = ({ peerId, connections, started }) => {
         }
       })
 
-      const sx = 0
-      const sy = 2258.25 * index
-      const sWidth = cars.current.width
-      const sHeight = cars.current.height / 8
       const dHeight = trackHeight * 0.75
       const dWidth = dHeight * 1.913
-      const dx = carPosition
-      const dy = trackHeight * (index + 0.125)
-      ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
-      if (started) {
-        if (!progress && carPosition < canvas.current.width * 0.05) {
-          lineUp.current[lineUpIndex].carPosition += 1
-        }
-        else if (progress > 0 && progress < 1 && carPosition < canvas.current.width * +progress.toFixed(1) - dWidth) {
-          lineUp.current[lineUpIndex].carPosition += 0.5
+      const notEndOfTrack = carPosition < canvas.current.width * +progress.toFixed(1) - dWidth
+
+      if (lineUp.current.find(({ key }) => key === peerId).progress === 1 && !notEndOfTrack) {
+
+      }
+      else {
+        const sx = 0
+        const sy = 2258.25 * index
+        const sWidth = cars.current.width
+        const sHeight = cars.current.height / 8
+        const dx = carPosition
+        const dy = trackHeight * (index + 0.125)
+        ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+        if (started) {
+          if (!progress && carPosition < canvas.current.width * 0.05) {
+            lineUp.current[lineUpIndex].carPosition += 1
+          }
+          else if (progress > 0 && progress < 1 && notEndOfTrack) {
+            lineUp.current[lineUpIndex].carPosition += 0.5
+          }
         }
       }
     })
