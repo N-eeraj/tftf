@@ -25,45 +25,53 @@ const Canvas = ({ peerId, connections, started }) => {
     ctx.fillStyle = '#2E2E2E'
     ctx.fillRect(0, 0, canvas.current.width, canvas.current.height)
 
-    lineUp.current?.forEach(({ key, index, progress, carPosition }, lineUpIndex) => {
+    lineUp.current?.forEach(({ index, progress, carPosition, completed }, lineUpIndex) => {
       ctx.fillStyle = '#EEE'
 
-      dashes.current.forEach((progress, trackIndex) => {
-        ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
-        if (started)
-          dashes.current[trackIndex] -= dashesConfig.speed
-        if (dashes.current[0] < 0) {
-          if (dashes.current.length < dashesConfig.count)
-            dashes.current.push(dashes.current[dashes.current.length - 1] + 100)
-          if (dashes.current[0] < -dashesConfig.width)
-            dashes.current.shift()
-        }
-      })
-
+      const sx = 0
+      const sy = 2258.25 * index
+      const sWidth = cars.current.width
+      const sHeight = cars.current.height / 8
       const dHeight = trackHeight * 0.75
       const dWidth = dHeight * 1.913
-      const notEndOfTrack = carPosition < canvas.current.width * +progress.toFixed(1) - dWidth
+      const dx = carPosition
+      const dy = trackHeight * (index + 0.125)
 
-      if (lineUp.current.find(({ key }) => key === peerId).progress === 1 && !notEndOfTrack) {
-
+      const gameOver = lineUp.current.find(({ key }) => key === peerId).progress === 1
+      if (gameOver) {
+        dashes.current.forEach(progress => 
+          ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
+        )
+        if (completed && carPosition < canvas.current.width / 2) {
+          lineUp.current[lineUpIndex].carPosition += 2
+        }
+        else if (!completed) {
+          lineUp.current[lineUpIndex].completed = true
+          lineUp.current[lineUpIndex].carPosition = -dWidth
+        }
       }
       else {
-        const sx = 0
-        const sy = 2258.25 * index
-        const sWidth = cars.current.width
-        const sHeight = cars.current.height / 8
-        const dx = carPosition
-        const dy = trackHeight * (index + 0.125)
-        ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
+        dashes.current.forEach((progress, trackIndex) => {
+          ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
+          if (started)
+            dashes.current[trackIndex] -= dashesConfig.speed
+          if (dashes.current[0] < 0) {
+            if (dashes.current.length < dashesConfig.count)
+              dashes.current.push(dashes.current[dashes.current.length - 1] + 100)
+            if (dashes.current[0] < -dashesConfig.width)
+              dashes.current.shift()
+          }
+        })
         if (started) {
           if (!progress && carPosition < canvas.current.width * 0.05) {
             lineUp.current[lineUpIndex].carPosition += 1
           }
-          else if (progress > 0 && progress < 1 && notEndOfTrack) {
+          else if (carPosition < canvas.current.width * +progress.toFixed(1) - dWidth) {
             lineUp.current[lineUpIndex].carPosition += 0.5
           }
         }
       }
+      ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
     })
   }
 
