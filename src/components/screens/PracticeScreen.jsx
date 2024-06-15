@@ -14,7 +14,6 @@ const PracticeScreen = () => {
   const [isPlaying, setIsPlaying] = useState(false)
   const [isIsLoadingText, setIsLoadingText] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState(0)
-  const [countDown, setCountdown] = useState(false)
   const [capsOn, setCapsOn] = useState(false)
 
   const sessionProgress = useRef({
@@ -42,11 +41,6 @@ const PracticeScreen = () => {
     setText(content)
     setIsLoadingText(false)
     setIsPlaying(true)
-    setCountdown(true)
-    setTimeout(() => {
-      startTime.current = Date.now()
-      stopWatch.current = setInterval(() => setTimeElapsed(Date.now() - startTime.current), 100)
-    }, 3000)
   }
 
   const handleRestart = () => {
@@ -74,10 +68,12 @@ const PracticeScreen = () => {
   }
 
   const handleKeyPress = (event) => {
-    if (!startTime.current) return
-
     setCapsOn(event.getModifierState("CapsLock"))
 
+    if (!startTime.current) {
+      startTime.current = Date.now()
+      stopWatch.current = setInterval(() => setTimeElapsed(Date.now() - startTime.current), 100)
+    }
     if (event.key === text[typed]) {
       setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
@@ -140,7 +136,7 @@ const PracticeScreen = () => {
               </strong>
             </div>
 
-            <Text wait={!startTime.current} countDown={countDown} timeout={3} capsOn={capsOn} className='col-span-2 w-3/4 min-w-[720px] max-w-[1080px] min-h-[240px]' onCountDownComplete={() => setCountdown(false)} />
+            <Text capsOn={capsOn} className='col-span-2 w-3/4 min-w-[720px] max-w-[1080px] min-h-[240px]' />
 
             {
               completion < 100 ?

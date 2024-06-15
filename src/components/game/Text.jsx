@@ -2,9 +2,7 @@ import { useState, useEffect, useContext, useRef } from 'react'
 
 import { RaceContext } from '@components/RaceContextProvider'
 
-const Text = ({ wait, timeout, countDown, capsOn, onCountDownComplete, className }) => {
-  const [timeLeft, setTimeLeft] = useState(timeout)
-  const interval = useRef(null)
+const Text = ({ capsOn, className }) => {
 
   const {
     text,
@@ -20,27 +18,6 @@ const Text = ({ wait, timeout, countDown, capsOn, onCountDownComplete, className
     return 'current'
   }
 
-  useEffect(() => {
-    if (!countDown) {
-      if (!wait) setTimeLeft(timeout)
-      return
-    }
-
-    interval.current = setInterval(() => {
-      setTimeLeft(prevTime => --prevTime)
-    }, 1000)
-    return () => {
-      clearInterval(interval.current)
-      onCountDownComplete()
-    }
-  }, [countDown])
-
-  useEffect(() => {
-    if (timeLeft) return
-    clearInterval(interval.current)
-    onCountDownComplete()
-  }, [timeLeft])
-
 
   return (
     <div className={`relative py-5 px-10 border-8 border-primary rounded-md ${className}`}>
@@ -48,14 +25,7 @@ const Text = ({ wait, timeout, countDown, capsOn, onCountDownComplete, className
         capsOn && <span className='absolute -top-5 left-5 bg-red-500 text-white text-xl'>CapsLock is on</span>
       }
       {
-        text.split('').map((letter, index) => <span className={`text-2xl font-mono ${wait ? 'blur-md' : undefined} ${letterClass(index)}`} key={index}>{letter}</span>)
-      }
-      {
-        (timeLeft && wait) ?
-          <div className='absolute top-1/2 left-1/2 text-9xl -translate-x-1/2 -translate-y-1/2'>
-            {timeLeft}
-          </div>
-          : undefined
+        text.split('').map((letter, index) => <span className={`text-2xl font-mono ${letterClass(index)}`} key={index}>{letter}</span>)
       }
     </div>
   )
