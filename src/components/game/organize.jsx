@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useSnackbar } from 'react-simple-snackbar'
 import Button from '@components/base/button'
 import getText from '@utils/getText'
 
@@ -6,8 +7,21 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
   const hostIdInput = useRef('')
   const controller = new AbortController()
   const signal = controller.signal
+  const [openSnackbar] = useSnackbar({
+    style: {
+      borderRadius: '50px'
+    },
+    closeStyle: {
+      color: '#0C7',
+    }
+  })
 
   const [loading, setLoading] = useState(false)
+
+  const handlePeerIdClick = () => {
+    navigator.clipboard.writeText(peerId)
+    openSnackbar('Copied to Host ID to Clipboard', 2000)
+  }
 
   const handleJoin = event => {
     event.preventDefault()
@@ -37,7 +51,9 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
         peerId ?
           (isHost ?
             <div className='flex flex-col items-center gap-y-2'>
-              Join with {peerId}
+              <span className='cursor-pointer' onClick={handlePeerIdClick}>
+                Join with {peerId}
+              </span>
               <Button loading={loading} autoFocus className='col-span-2 bg-primary text-white' onClick={handlePlay}>
                 Start Race
               </Button>
