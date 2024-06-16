@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from 'react'
+import { useSearchParams } from 'react-router-dom'
 import { useSnackbar } from 'react-simple-snackbar'
 import Button from '@components/base/button'
 import getText from '@utils/getText'
@@ -7,6 +8,7 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
   const hostIdInput = useRef('')
   const controller = new AbortController()
   const signal = controller.signal
+  const [query] = useSearchParams()
   const [openSnackbar] = useSnackbar({
     style: {
       borderRadius: '50px'
@@ -25,9 +27,7 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
 
   const handleJoin = event => {
     event.preventDefault()
-    if (hostIdInput.current.value) {
-      onJoin(hostIdInput.current.value.trim())
-    }
+    onJoin(hostIdInput.current.value)
   }
 
   const handlePlay = async () => {
@@ -40,6 +40,9 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
   }
 
   useEffect(() => {
+    hostIdInput.current.value = query.get('hostId')
+    onJoin(query.get('hostId'))
+
     return () => {
       controller.abort()
     }
