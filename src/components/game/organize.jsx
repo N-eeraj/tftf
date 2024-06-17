@@ -1,8 +1,9 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useContext, useRef } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import { useSnackbar } from 'react-simple-snackbar'
 import Button from '@components/base/button'
 import getText from '@utils/getText'
+import { RaceContext } from '@components/RaceContextProvider'
 
 const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, onJoin, onStart }) => {
   const hostIdInput = useRef('')
@@ -19,6 +20,8 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
   })
 
   const [loading, setLoading] = useState(false)
+
+  const { setText } = useContext(RaceContext)
 
   const handlePeerIdClick = () => {
     navigator.clipboard.writeText(peerId)
@@ -37,6 +40,7 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
       maxLength: 200
     })
     onStart(content)
+    setText(content)
   }
 
   useEffect(() => {

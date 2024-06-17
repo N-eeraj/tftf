@@ -68,7 +68,7 @@ const PracticeScreen = () => {
   }
 
   const handleKeyPress = (event) => {
-    setCapsOn(event.getModifierState("CapsLock"))
+    setCapsOn(event.getModifierState('CapsLock'))
 
     if (!startTime.current) {
       startTime.current = Date.now()
@@ -82,6 +82,7 @@ const PracticeScreen = () => {
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
+    event.preventDefault()
   }
 
   const clearEvents = () => {

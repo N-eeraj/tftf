@@ -1,16 +1,27 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useContext, useEffect } from 'react'
+import Text from '@components/game/Text'
+import { RaceContext } from '@components/RaceContextProvider'
 
-const RaceScreen = ({ text, onKeyPress }) => {
-  const [keysPressed, setKeysPressed] = useState([])
+const RaceScreen = ({ raceData, onKeyPress }) => {
   const [capsOn, setCapsOn] = useState(false)
+  const {
+    text,
+    typed,
+    keysPressed,
+    setText,
+    setTyped,
+    setKeysPressed,
+  } = useContext(RaceContext)
 
-  const typed = useRef(0)
+  const raceCompleted = text.length == typed
 
   const handleKeyPress = (event) => {
-    setCapsOn(event.getModifierState("CapsLock"))
-    if (event.key === text[typed.current]) {
-      onKeyPress(++typed.current)
+    setCapsOn(event.getModifierState('CapsLock'))
+
+    if (event.key === text[typed]) {
+      setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
+      onKeyPress(typed + 1)
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
@@ -23,29 +34,23 @@ const RaceScreen = ({ text, onKeyPress }) => {
     return () => {
       document.removeEventListener('keypress', handleKeyPress)
     }
-  }, [text])
+  }, [text, typed])
 
   useEffect(() => {
-    if (text.length == typed.current) {
+    if (raceCompleted) {
       document.removeEventListener('keypress', handleKeyPress)
-      console.log(keysPressed)
+      // console.log(keysPressed)
     }
   }, [keysPressed])
 
-  const letterClass = index => {
-    if (index < typed.current)
-      return 'opacity-30'
-    if (index === typed.current)
-      return `${(keysPressed[keysPressed.length - 1] || !keysPressed.length) ? 'bg-primary' : 'bg-red-500'} text-white`
-    return 'current'
-  }
+  useEffect(() => {
+    if (!text)
+      setText(raceData.data)
+  }, [raceData.data])
 
   return (
     <>
-      <div className='relative py-5 px-10 border-8 border-primary rounded-md'>
-        { capsOn && <span className='absolute -top-5 left-5 bg-red-500 text-white text-xl'>CapsLock is on</span> }
-        { text.split('').map((letter, index) => <span className={`text-2xl font-mono ${letterClass(index)}`} key={index}>{letter}</span>) }
-      </div>
+      <Text capsOn={capsOn} className='col-span-2 w-full min-w-[720px] max-w-[1080px] min-h-[240px]' />
     </>
   )
 }

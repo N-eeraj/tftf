@@ -1,4 +1,4 @@
-import { useState, useEffect, useContext, useRef } from 'react'
+import { useContext } from 'react'
 
 import { RaceContext } from '@components/RaceContextProvider'
 
