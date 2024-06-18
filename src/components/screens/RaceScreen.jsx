@@ -3,6 +3,7 @@ import Text from '@components/game/Text'
 import { RaceContext } from '@components/RaceContextProvider'
 
 const RaceScreen = ({ raceData, onKeyPress }) => {
+  const [raceRankings, setRaceRankings] = useState(null)
   const [capsOn, setCapsOn] = useState(false)
   const {
     text,
@@ -48,9 +49,30 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
       setText(raceData.data)
   }, [raceData.data])
 
+  useEffect(() => {
+    if (raceData.connections[raceData.peerId].progress !== 1)
+      return
+    setRaceRankings(
+      Object.entries(raceData.connections).sort(([_, a], [__, b]) => {
+        if (a.progress > b.progress) return -1
+        if (a.progress < b.progress) return 1
+        if (a.lastUpdated < b.lastUpdated) return -1
+        if (a.lastUpdated > b.lastUpdated) return 1
+        return 0
+      })
+      .map(([key, { progress }]) => {
+        return {
+          key,
+          progress: (progress * 100).toFixed(2),
+        }
+      })
+    )
+  }, [raceData.connections])
+
   return (
     <>
       <Text capsOn={capsOn} className='col-span-2 w-full min-w-[720px] max-w-[1080px] min-h-[240px]' />
+      {JSON.stringify(raceRankings)}
     </>
   )
 }

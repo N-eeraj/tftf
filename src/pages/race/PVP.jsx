@@ -19,7 +19,7 @@ const PVP = () => {
 
         {
           mainData.data ?
-            <RaceScreen raceData={{ ...mainData, connections }} onKeyPress={updateProgress} /> :
+            <RaceScreen raceData={{ ...mainData, connections, peerId }} onKeyPress={updateProgress} /> :
             <Organize hostConnection={hostConnection} clientConnection={clientConnection} peerId={peerId} isHost={isHost.current} onHost={host} onJoin={handleJoin} onStart={text => stopConnections(text)} />
         }
       </div>
