@@ -21,6 +21,14 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
 
   const [loading, setLoading] = useState(false)
 
+  const [playerName, setPlayerName] = useState(() => localStorage.getItem('playerName') || '')
+  const handlePlayerNameChange = (event) => {
+    const name = event.target.value.trim()
+    setPlayerName(name)
+    if (name)
+      localStorage.setItem('playerName', name)
+  }
+
   const { setText } = useContext(RaceContext)
 
   const handlePeerIdClick = () => {
@@ -28,16 +36,24 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
     openSnackbar('Copied to Host ID to Clipboard', 2000)
   }
 
+  const handleHost = () => {
+    if (!playerName)
+      return openSnackbar('Please enter you name', 2000)
+    onHost(playerName)
+  }
+
   const handleJoin = event => {
     event.preventDefault()
-    onJoin(hostIdInput.current.value)
+    if (!playerName)
+      return openSnackbar('Please enter you name', 2000)
+    onJoin(hostIdInput.current.value, playerName)
   }
 
   const handlePlay = async () => {
     setLoading(true)
     const content = await getText(signal, {
-      minLength: 150,
-      maxLength: 200
+      minLength: 50,
+      maxLength: 60
     })
     onStart(content)
     setText(content)
@@ -45,7 +61,9 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
 
   useEffect(() => {
     hostIdInput.current.value = query.get('hostId')
-    onJoin(query.get('hostId'))
+    if (!playerName)
+      return openSnackbar('Please enter you name', 2000)
+    onJoin(query.get('hostId'), playerName)
 
     return () => {
       controller.abort()
@@ -67,7 +85,11 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
             </div> :
             <p> Please wait while host starts the race </p>) :
           <div className='flex flex-col items-center gap-y-4'>
-            <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-primary text-white' onClick={onHost}>
+            <div className='flex justify-center items-center gap-x-4'>
+              <input value={playerName} placeholder='Your Name' className={`py-1 px-4 text-xl text-primary focus:text-black font-bold focus:font-normal text-center ${!playerName && 'border'} border-primary focus:border-2 outline-none rounded-md`} onChange={handlePlayerNameChange} />
+            </div>
+    
+            <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-primary text-white' onClick={handleHost}>
               Host
             </Button>
             <span>

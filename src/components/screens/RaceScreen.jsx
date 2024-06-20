@@ -60,9 +60,10 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
         if (a.lastUpdated > b.lastUpdated) return 1
         return 0
       })
-      .map(([key, { progress }]) => {
+      .map(([key, { progress, playerName }]) => {
         return {
           key,
+          playerName,
           progress: (progress * 100).toFixed(2),
         }
       })
@@ -71,7 +72,7 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
 
   return (
     <>
-      <Text capsOn={capsOn} className='col-span-2 w-full min-w-[720px] max-w-[1080px] min-h-[240px]' />
+      <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
       {JSON.stringify(raceRankings)}
     </>
   )

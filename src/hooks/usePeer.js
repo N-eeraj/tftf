@@ -28,6 +28,9 @@ const usePeer = () => {
             index: Object.keys(connections).length,
           }
         }
+      case 'playerName':
+        connections[data.from].playerName = data.playerName
+        return connections
       case 'progress':
         return {
           ...connections,
@@ -51,7 +54,7 @@ const usePeer = () => {
   }
 
   // initiate host
-  const host = () => {
+  const host = playerName => {
     isHost.current = true
     setHostConnection(true)
     const handleHostConnection = hostId => {
@@ -63,6 +66,7 @@ const usePeer = () => {
             lastUpdated: 0,
             progress: 0,
             index: 0,
+            playerName,
           }
         },
       })
@@ -84,19 +88,24 @@ const usePeer = () => {
   }
 
   // connect client to a peer
-  const connectToPeer = peerId => {
-    const connection = peer.current.connect(peerId)
+  const connectToPeer = (connectionId, peerId, playerName) => {
+    const connection = peer.current.connect(connectionId)
     connectionList.current.push(connection)
     connection.on('open', () => {
       setClientConnection(false)
       handleMessage(connection)
+      sendMessage({
+        type: 'playerName',
+        data: playerName,
+        from: peerId,
+      })
     })
   }
 
   // initiate client & connect to host
-  const connect = hostId => {
+  const connect = (hostId, playerName) => {
     setClientConnection(true)
-    createPeer(() => connectToPeer(hostId))
+    createPeer((peerId) => connectToPeer(hostId, peerId, playerName))
   }
 
   const sendMessage = (message, from = peerId) => connectionList.current.forEach(connection => {
@@ -112,6 +121,12 @@ const usePeer = () => {
         setConnections({
           type: 'replace',
           data,
+        })
+        break
+      case 'playerName':
+        setConnections({
+          type: 'playerName',
+          data: { from, playerName: data },
         })
         break
       case 'text':
@@ -148,6 +163,7 @@ const usePeer = () => {
       lastUpdated: Date.now() - mainData.start,
       progress: text / mainData.data.length,
       index: connections[peerId].index,
+      playerName: connections[peerId].playerName,
     }
     setConnections({
       type: 'progress',
