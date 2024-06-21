@@ -28,8 +28,8 @@ const usePeer = () => {
             index: Object.keys(connections).length,
           }
         }
-      case 'playerName':
-        connections[data.from].playerName = data.playerName
+      case 'playerInfo':
+        connections[data.from].playerInfo = data.playerInfo
         return connections
       case 'progress':
         return {
@@ -54,7 +54,7 @@ const usePeer = () => {
   }
 
   // initiate host
-  const host = playerName => {
+  const host = playerInfo => {
     isHost.current = true
     setHostConnection(true)
     const handleHostConnection = hostId => {
@@ -66,7 +66,7 @@ const usePeer = () => {
             lastUpdated: 0,
             progress: 0,
             index: 0,
-            playerName,
+            playerInfo,
           }
         },
       })
@@ -88,24 +88,24 @@ const usePeer = () => {
   }
 
   // connect client to a peer
-  const connectToPeer = (connectionId, peerId, playerName) => {
+  const connectToPeer = (connectionId, peerId, playerInfo) => {
     const connection = peer.current.connect(connectionId)
     connectionList.current.push(connection)
     connection.on('open', () => {
       setClientConnection(false)
       handleMessage(connection)
       sendMessage({
-        type: 'playerName',
-        data: playerName,
+        type: 'playerInfo',
+        data: playerInfo,
         from: peerId,
       })
     })
   }
 
   // initiate client & connect to host
-  const connect = (hostId, playerName) => {
+  const connect = (hostId, playerInfo) => {
     setClientConnection(true)
-    createPeer((peerId) => connectToPeer(hostId, peerId, playerName))
+    createPeer((peerId) => connectToPeer(hostId, peerId, playerInfo))
   }
 
   const sendMessage = (message, from = peerId) => connectionList.current.forEach(connection => {
@@ -123,10 +123,10 @@ const usePeer = () => {
           data,
         })
         break
-      case 'playerName':
+      case 'playerInfo':
         setConnections({
-          type: 'playerName',
-          data: { from, playerName: data },
+          type: 'playerInfo',
+          data: { from, playerInfo: data },
         })
         break
       case 'text':
@@ -163,7 +163,7 @@ const usePeer = () => {
       lastUpdated: Date.now() - mainData.start,
       progress: text / mainData.data.length,
       index: connections[peerId].index,
-      playerName: connections[peerId].playerName,
+      playerInfo: connections[peerId].playerInfo,
     }
     setConnections({
       type: 'progress',

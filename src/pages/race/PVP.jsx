@@ -7,9 +7,9 @@ import RaceContextProvider from '@components/RaceContextProvider'
 const PVP = () => {
   const { peerId, host, connect, isHost, hostConnection, clientConnection, connections, stopConnections, mainData, updateProgress } = usePeer()
 
-  const handleJoin = (hostId, playerName) => {
+  const handleJoin = (hostId, playerInfo) => {
     if (hostId?.trim())
-      connect(hostId.trim(), playerName)
+      connect(hostId.trim(), playerInfo)
   }
 
   return (
