@@ -1,6 +1,5 @@
 import { useEffect, useRef } from 'react'
-
-import carsImage from '@images/cars.png'
+import carsImage from '@images/car-sprites.png'
 
 const Canvas = ({ peerId, connections, started }) => {
   const dashesConfig = {
@@ -25,11 +24,11 @@ const Canvas = ({ peerId, connections, started }) => {
     ctx.fillStyle = '#2E2E2E'
     ctx.fillRect(0, 0, canvas.current.width, canvas.current.height)
 
-    lineUp.current?.forEach(({ key, index, progress, carPosition, completed, lastUpdated }, lineUpIndex) => {
+    lineUp.current?.forEach(({ key, index, progress, carPosition, completed, lastUpdated, playerCar }, lineUpIndex) => {
       ctx.fillStyle = '#EEE'
 
       const sx = 0
-      const sy = 2258.25 * index
+      const sy = 2258.25 * playerCar
       const sWidth = cars.current.width
       const sHeight = cars.current.height / 8
       const dHeight = trackHeight * 0.75
@@ -99,19 +98,18 @@ const Canvas = ({ peerId, connections, started }) => {
   useEffect(() => {
     canvas.current.height = Object.keys(connections).length * 40
     canvas.current.width = 600
-    lineUp.current = Object.entries(connections).reduce((sorted, [key, { index, ...progress }], connectionsIndex) => {
-      let carPosition, completed
-      if (lineUp.current) {
-        carPosition = lineUp.current[connectionsIndex]?.carPosition ?? 0
-        completed = lineUp.current[connectionsIndex]?.completed ?? false
-      }
+    lineUp.current = Object.entries(connections).reduce((sorted, [key, { index, ...details }], connectionsIndex) => {
+      const carPosition = lineUp.current[connectionsIndex]?.carPosition ?? 0
+      const completed = lineUp.current[connectionsIndex]?.completed ?? false
+
       const data = {
         key,
         index,
         carPosition,
         completed,
-        ...progress,
+        ...details
       }
+
       if (!sorted.length || index < sorted[0].index)
         sorted.unshift(data)
       else if (index > sorted[sorted.length - 1].index)

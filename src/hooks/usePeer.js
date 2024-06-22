@@ -22,22 +22,20 @@ const usePeer = () => {
       case 'new':
         return {
           ...connections,
-          [data]: {
+          [data.from]: {
             lastUpdated: 0,
             progress: 0,
             index: Object.keys(connections).length,
+            ...data.playerInfo
           }
         }
-      case 'playerInfo':
-        connections[data.from].playerInfo = data.playerInfo
-        return connections
       case 'progress':
         return {
           ...connections,
           [data.from]: data.data
         }
       default:
-        console.warn(`Invalid connection update type: ${type}`)
+        console.error(`Invalid connection update type: ${type}`)
         return connections
     }
   }
@@ -66,7 +64,7 @@ const usePeer = () => {
             lastUpdated: 0,
             progress: 0,
             index: 0,
-            playerInfo,
+            ...playerInfo,
           }
         },
       })
@@ -78,11 +76,6 @@ const usePeer = () => {
         return
       }
       connectionList.current.push(connection)
-      // update connections list
-      setConnections({
-        type: 'new',
-        data: connection.peer,
-      })
       handleMessage(connection)
     })
   }
@@ -95,7 +88,7 @@ const usePeer = () => {
       setClientConnection(false)
       handleMessage(connection)
       sendMessage({
-        type: 'playerInfo',
+        type: 'newPlayer',
         data: playerInfo,
         from: peerId,
       })
@@ -123,9 +116,9 @@ const usePeer = () => {
           data,
         })
         break
-      case 'playerInfo':
+      case 'newPlayer':
         setConnections({
-          type: 'playerInfo',
+          type: 'new',
           data: { from, playerInfo: data },
         })
         break
@@ -160,10 +153,10 @@ const usePeer = () => {
 
   const updateProgress = text => {
     const data = {
+      ...connections[peerId],
       lastUpdated: Date.now() - mainData.start,
       progress: text / mainData.data.length,
       index: connections[peerId].index,
-      playerInfo: connections[peerId].playerInfo,
     }
     setConnections({
       type: 'progress',
