@@ -3,10 +3,9 @@ import carsImage from '@images/car-sprites.png'
 
 const Canvas = ({ peerId, connections, started }) => {
   const dashesConfig = {
-    width: 50,
-    height: 5,
-    count: 7,
-    speed: 3,
+    width: 75,
+    height: 8,
+    count: 15,
   }
 
   const canvas = useRef()
@@ -24,8 +23,9 @@ const Canvas = ({ peerId, connections, started }) => {
     ctx.fillStyle = '#2E2E2E'
     ctx.fillRect(0, 0, canvas.current.width, canvas.current.height)
 
-    lineUp.current?.forEach(({ key, index, progress, carPosition, completed, lastUpdated, playerCar }, lineUpIndex) => {
+    lineUp.current?.forEach(({ key, index, progress, carPosition, completed, lastUpdated, playerName, playerCar }, lineUpIndex) => {
       ctx.fillStyle = '#EEE'
+      ctx.shadowBlur = 0
 
       const sx = 0
       const sy = 2258.25 * playerCar
@@ -72,10 +72,10 @@ const Canvas = ({ peerId, connections, started }) => {
         dashes.current.forEach((progress, trackIndex) => {
           ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
           if (started)
-            dashes.current[trackIndex] -= dashesConfig.speed
+            dashes.current[trackIndex] -= dashesConfig.width / 20
           if (dashes.current[0] < 0) {
             if (dashes.current.length < dashesConfig.count)
-              dashes.current.push(dashes.current[dashes.current.length - 1] + 100)
+              dashes.current.push(dashes.current[dashes.current.length - 1] + dashesConfig.width * 2)
             if (dashes.current[0] < -dashesConfig.width)
               dashes.current.shift()
           }
@@ -92,12 +92,18 @@ const Canvas = ({ peerId, connections, started }) => {
       if (!gameOver || key === peerId) {
         ctx.drawImage(cars.current, sx, sy, sWidth, sHeight, dx, dy, dWidth, dHeight)
       }
+      ctx.fillStyle = '#555'
+      ctx.fillRect(dx + dWidth * 1.1, dy + dHeight * 0.2, 60, dHeight * 0.75)
+      ctx.shadowBlur = 7
+      ctx.font = `${dHeight / 3}px Arial`
+      ctx.fillStyle = key === peerId ? '#0C7' : '#EEE'
+      ctx.fillText(key === peerId ? 'You' : playerName, dx + dWidth * 1.2, dy + dHeight * 0.66)
     })
   }
 
   useEffect(() => {
-    canvas.current.height = Object.keys(connections).length * 40
-    canvas.current.width = 600
+    canvas.current.height = Object.keys(connections).length * 80
+    canvas.current.width = 1200
     lineUp.current = Object.entries(connections).reduce((sorted, [key, { index, ...details }], connectionsIndex) => {
       const carPosition = lineUp.current[connectionsIndex]?.carPosition ?? 0
       const completed = lineUp.current[connectionsIndex]?.completed ?? false
