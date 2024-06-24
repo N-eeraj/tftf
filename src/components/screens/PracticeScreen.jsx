@@ -113,53 +113,58 @@ const PracticeScreen = () => {
   const correctTyped = keysPressed.filter(correct => correct).length || 0
   const accuracy = (correctTyped * 100 / keysPressed.length || 0).toFixed(2)
   const wpm = Math.round(correctTyped / (timeElapsed / 12000) || 0)
-  const completion = (typed * 100 / text.length).toFixed(2)
+  const progress = (typed * 100 / text.length).toFixed(2)
 
   return (
-    <section className='grid grid-cols-2 place-items-center h-full'>
+    <>
       {
         isPlaying ?
-          <>
-            <div className='flex flex-col justify-center items-center gap-x-1 w-full h-full border'>
-              <span className='text-xl'>
-                Accuracy:
-              </span>
-              <strong className='text-4xl'>
-                {accuracy} %
-              </strong>
-            </div>
-            <div className='flex flex-col justify-center items-center gap-x-1 w-full h-full border'>
-              <span className='text-xl'>
-                Speed:
-              </span>
-              <strong className='text-4xl'>
-                {wpm} WPM
-              </strong>
-            </div>
-
-            <Text capsOn={capsOn} className='col-span-2 w-3/4 min-w-[720px] max-w-[1080px] min-h-[240px]' />
-
-            {
-              completion < 100 ?
-                <div className='relative col-span-2 w-3/4 h-12 bg-gray-200 rounded-md overflow-hidden'>
-                  <span className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 font-bold'>
-                    {completion}%
+        <>
+            <div className='fixed top-1/2 left-1/2 flex flex-col justify-center items-center w-full min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
+              <div className='flex justify-between w-full text-lg text-light/50'>
+                <div className='flex items-end gap-x-1'>
+                  Accuracy:
+                  <span className="text-accent text-3xl">
+                    {accuracy} %
                   </span>
-                  <div className='h-full bg-primary font-bold' style={{ width: `${completion}%` }} />
-                </div> :
+                </div>
+                <div className='flex items-end gap-x-1'>
+                  <span className="text-accent text-3xl">
+                    {wpm}
+                  </span>
+                  WPM
+                </div>
+              </div>
 
-                <Button autoFocus className='col-span-2 text-primary border-2 border-primary' onClick={handleRestart}>
+              <Text capsOn={capsOn} className='min-h-[240px]' />
+            </div>
+
+            <div className='fixed bottom-12 left-1/2 w-3/4 text-center -translate-x-1/2'>
+              { progress < 100 ?
+                <>
+                  <div className='flex items-end gap-x-1 text-light'>
+                    Progress:
+                    <span className="text-accent text-2xl">
+                      {progress} %
+                    </span>
+                  </div>
+                  <div className='h-2 mt-2 bg-light/20 rounded-full overflow-hidden'>
+                    <div className='h-full bg-accent font-bold duration-300' style={{ width: `${progress}%` }} />
+                  </div>
+                </> :
+
+                <Button autoFocus className='bg-accent text-dark hover:text-white duration-300' onClick={handleRestart}>
                   Restart Practice
                 </Button>
-            }
-
+              }
+            </div>
           </> :
 
-          <Button loading={isIsLoadingText} autoFocus className='col-span-2 bg-primary text-white' onClick={handlePlay}>
+          <Button loading={isIsLoadingText} autoFocus className='fixed top-1/2 left-1/2 bg-accent text-dark hover:text-white duration-300 -translate-x-1/2 -translate-y-1/2' onClick={handlePlay}>
             Start Practice
           </Button>
       }
-    </section>
+    </>
   )
 }
 

@@ -86,7 +86,7 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
               <span className='cursor-pointer' onClick={handlePeerIdClick}>
                 Join with {peerId}
               </span>
-              <Button loading={loading} autoFocus className='col-span-2 bg-primary text-white' onClick={handlePlay}>
+              <Button loading={loading} autoFocus className='col-span-2 bg-accent text-white' onClick={handlePlay}>
                 Start Race
               </Button>
             </div> :
@@ -94,15 +94,15 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
           <div className='flex flex-col items-center gap-y-4'>
             <PlayerInfo name={playerName} car={playerCar} onNameChange={handlePlayerNameChange} onCarChange={handlePlayerCarChange} />
     
-            <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-primary text-white' onClick={handleHost}>
+            <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-accent text-white' onClick={handleHost}>
               Host
             </Button>
             <span>
               OR
             </span>
             <form className='flex gap-x-4' onSubmit={handleJoin}>
-              <input ref={hostIdInput} required disabled={hostConnection || clientConnection} className='py-1 px-4 border border-primary focus:border-2 outline-none rounded-md' />
-              <Button disabled={hostConnection} loading={clientConnection} className='w-32 bg-primary text-white'>
+              <input ref={hostIdInput} required disabled={hostConnection || clientConnection} className='py-1 px-4 border border-accent focus:border-2 outline-none rounded-md' />
+              <Button disabled={hostConnection} loading={clientConnection} className='w-32 bg-accent text-white'>
                 Join
               </Button>
             </form>

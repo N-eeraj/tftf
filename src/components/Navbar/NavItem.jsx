@@ -4,7 +4,7 @@ const NavItem = ({ to, text }) => {
   return (
     <NavLink
       to={to}
-      className={({ isActive }) => `text-md md:text-xl font-medium duration-300 ${isActive ? 'text-primary' : undefined}`}>
+      className={({ isActive }) => `text-md md:text-xl font-medium duration-300 ${isActive ? 'text-accent' : 'text-light'}`}>
       {text}
     </NavLink>
   )
