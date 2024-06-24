@@ -20,13 +20,10 @@ const Text = ({ capsOn, className }) => {
 
 
   return (
-    <div className={`py-5 ${className}`}>
-      { capsOn && (
-        <span className='absolute -top-5 left-5 bg-red-500 text-light text-xl'>
-          CapsLock is on
-        </span>
-        )
-      }
+    <div className={`${className}`}>
+      <div className='grid place-items-center h-12'>
+      { capsOn && <span className='px-8 py-2 bg-accent text-dark text-center text-lg font-medium rounded-lg'> Caps Lock </span> }
+      </div>
       { text.split('').map((letter, index) => (
           <span className={`text-3xl font-mono tracking-wide leading-10 ${letterClass(index)}`} key={index}>
             {letter}

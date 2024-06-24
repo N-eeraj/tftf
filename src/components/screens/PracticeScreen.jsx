@@ -2,6 +2,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 
 import Text from '@components/game/Text'
 import Button from '@components/base/button'
+import LabelValue from '@components/LabelValue'
 import { RaceContext } from '@components/RaceContextProvider'
 
 import getText from '@utils/getText'
@@ -116,55 +117,36 @@ const PracticeScreen = () => {
   const progress = (typed * 100 / text.length).toFixed(2)
 
   return (
-    <>
-      {
-        isPlaying ?
-        <>
-            <div className='fixed top-1/2 left-1/2 flex flex-col justify-center items-center w-full min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
-              <div className='flex justify-between w-full text-lg text-light/50'>
-                <div className='flex items-end gap-x-1'>
-                  Accuracy:
-                  <span className="text-accent text-3xl">
-                    {accuracy} %
-                  </span>
-                </div>
-                <div className='flex items-end gap-x-1'>
-                  <span className="text-accent text-3xl">
-                    {wpm}
-                  </span>
-                  WPM
-                </div>
+    isPlaying ?
+      <>
+        <div className='fixed top-[calc(50vh-50px)] left-1/2 flex flex-col justify-center items-center w-full min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
+          <div className='flex justify-between w-full text-lg text-light/50'>
+            <LabelValue label='Accuracy:' value={`${accuracy}%`} valueSize='text-3xl' />
+            <LabelValue label='WPM' value={wpm} reverse valueSize='text-3xl' />
+          </div>
+
+          <Text capsOn={capsOn} className='min-h-[240px]' />
+        </div>
+
+        <div className='fixed bottom-12 left-1/2 w-3/4 text-center -translate-x-1/2'>
+          { progress < 100 ?
+            <>
+              <LabelValue label='Progress:' value={`${progress}%`} />
+              <div className='h-2 mt-2 bg-light/20 rounded-full overflow-hidden'>
+                <div className='h-full bg-accent font-bold duration-300' style={{ width: `${progress}%` }} />
               </div>
+            </> :
 
-              <Text capsOn={capsOn} className='min-h-[240px]' />
-            </div>
+            <Button autoFocus className='bg-accent text-dark hover:text-white duration-300' onClick={handleRestart}>
+              Restart Practice
+            </Button>
+          }
+        </div>
+      </> :
 
-            <div className='fixed bottom-12 left-1/2 w-3/4 text-center -translate-x-1/2'>
-              { progress < 100 ?
-                <>
-                  <div className='flex items-end gap-x-1 text-light'>
-                    Progress:
-                    <span className="text-accent text-2xl">
-                      {progress} %
-                    </span>
-                  </div>
-                  <div className='h-2 mt-2 bg-light/20 rounded-full overflow-hidden'>
-                    <div className='h-full bg-accent font-bold duration-300' style={{ width: `${progress}%` }} />
-                  </div>
-                </> :
-
-                <Button autoFocus className='bg-accent text-dark hover:text-white duration-300' onClick={handleRestart}>
-                  Restart Practice
-                </Button>
-              }
-            </div>
-          </> :
-
-          <Button loading={isIsLoadingText} autoFocus className='fixed top-1/2 left-1/2 bg-accent text-dark hover:text-white duration-300 -translate-x-1/2 -translate-y-1/2' onClick={handlePlay}>
-            Start Practice
-          </Button>
-      }
-    </>
+      <Button loading={isIsLoadingText} autoFocus className='fixed top-1/2 left-1/2 bg-accent text-dark hover:text-white duration-300 -translate-x-1/2 -translate-y-1/2' onClick={handlePlay}>
+        Start Practice
+      </Button>
   )
 }
 
