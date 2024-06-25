@@ -119,7 +119,7 @@ const PracticeScreen = () => {
   return (
     isPlaying ?
       <>
-        <div className='fixed top-[calc(50vh-50px)] left-1/2 flex flex-col justify-center items-center w-full min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
+        <div className='fixed top-[calc(50vh-50px)] left-1/2 flex flex-col justify-center items-center w-[90vw] min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
           <div className='flex justify-between w-full text-lg text-light/50'>
             <LabelValue label='Accuracy:' value={`${accuracy}%`} valueSize='text-3xl' />
             <LabelValue label='WPM' value={wpm} reverse valueSize='text-3xl' />
@@ -132,8 +132,8 @@ const PracticeScreen = () => {
           { progress < 100 ?
             <>
               <LabelValue label='Progress:' value={`${progress}%`} />
-              <div className='h-2 mt-2 bg-light/20 rounded-full overflow-hidden'>
-                <div className='h-full bg-accent font-bold duration-300' style={{ width: `${progress}%` }} />
+              <div className='relative h-2 mt-2 bg-light/20 rounded-full overflow-hidden'>
+                <div className='h-full bg-accent font-bold rounded-full duration-300' style={{ width: `${progress}%` }} />
               </div>
             </> :
 

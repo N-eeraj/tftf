@@ -1,31 +1,52 @@
-import { useContext } from 'react'
+import { useRef, useEffect, useContext } from 'react'
 
 import { RaceContext } from '@components/RaceContextProvider'
 
 const Text = ({ capsOn, className }) => {
+  const container = useRef(null)
+  const letters = useRef([])
+  const blink = useRef(true)
+  const caretCoords = useRef({ x: -2, y: 0 })
 
   const {
     text,
     typed,
-    keysPressed
+    keysPressed,
   } = useContext(RaceContext)
 
   const letterClass = index => {
     if (index < typed)
       return 'text-light'
-    if (index === typed)
-      return `${(keysPressed[keysPressed.length - 1] || !keysPressed.length) ? 'bg-accent' : 'bg-red-500'} text-dark`
     return 'text-light opacity-30'
   }
 
+  const mistake = keysPressed[keysPressed.length - 1] || !keysPressed.length
+
+  useEffect(() => {
+    if (!typed || !container.current || !letters.current[typed]) return
+    blink.current = false
+    const blinker = setTimeout(() => blink.current = true, 3000)
+    const { x: containerX, y: containerY } = container.current.getBoundingClientRect()
+    const { x: lettersX, y: lettersY } = letters.current[typed].getBoundingClientRect()
+    caretCoords.current = {
+      x: lettersX - containerX - 2,
+      y: lettersY - containerY - 48,
+    }
+
+    return () => clearTimeout(blinker)
+  }, [typed])
+
 
   return (
-    <div className={`${className}`}>
+    <div ref={container} className={`relative ${className}`}>
       <div className='grid place-items-center h-12'>
       { capsOn && <span className='px-8 py-2 bg-accent text-dark text-center text-lg font-medium rounded-lg'> Caps Lock </span> }
       </div>
+
+      { typed !== text.length && <span className={`absolute w-[3px] h-9 rounded-full duration-200 ${mistake ? 'bg-accent' : 'bg-red-500'} ${blink.current && 'animate-blink'}`} style={{ transform: `translate(${caretCoords.current.x}px, ${caretCoords.current.y}px)` }} /> }
+
       { text.split('').map((letter, index) => (
-          <span className={`text-3xl font-mono tracking-wide leading-10 ${letterClass(index)}`} key={index}>
+          <span ref={el => letters.current[index] = el} className={`text-3xl font-mono tracking-wider leading-10 duration-300 ${letterClass(index)}`} key={index}>
             {letter}
           </span>
         ))

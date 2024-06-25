@@ -43,8 +43,8 @@ const Canvas = ({ peerId, connections, started }) => {
           ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
         )
         if (key === peerId) {
-          if (completed && carPosition < canvas.current.width / 2) {
-            lineUp.current[lineUpIndex].carPosition += 2
+          if (completed && carPosition < canvas.current.width / 3) {
+            lineUp.current[lineUpIndex].carPosition += 5
           }
           else if (!completed) {
             lineUp.current[lineUpIndex].completed = true
@@ -57,8 +57,8 @@ const Canvas = ({ peerId, connections, started }) => {
             dx = canvas.current.width / 2
           }
           else {
-            if (completed && carPosition < canvas.current.width / 2) {
-              lineUp.current[lineUpIndex].carPosition += 2
+            if (completed && carPosition < canvas.current.width / 3) {
+              lineUp.current[lineUpIndex].carPosition += 5
             }
             else if (!completed) {
               lineUp.current[lineUpIndex].completed = true
@@ -72,7 +72,7 @@ const Canvas = ({ peerId, connections, started }) => {
         dashes.current.forEach((progress, trackIndex) => {
           ctx.fillRect(progress, trackHeight * (index + 0.5) - dashesConfig.height * 0.5, dashesConfig.width, dashesConfig.height)
           if (started)
-            dashes.current[trackIndex] -= dashesConfig.width / 20
+            dashes.current[trackIndex] -= dashesConfig.width / 10
           if (dashes.current[0] < 0) {
             if (dashes.current.length < dashesConfig.count)
               dashes.current.push(dashes.current[dashes.current.length - 1] + dashesConfig.width * 2)
