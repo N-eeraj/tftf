@@ -6,7 +6,6 @@ import LabelValue from '@components/LabelValue'
 import { RaceContext } from '@components/RaceContextProvider'
 
 import getText from '@utils/getText'
-import typeSound from '@sounds/type.wav'
 
 const PracticeScreen = () => {
   const controller = new AbortController()
@@ -19,7 +18,7 @@ const PracticeScreen = () => {
 
   const sessionProgress = useRef({
     wpm: 0,
-    length: 100
+    length: 2
   })
   const startTime = useRef(0)
   const stopWatch = useRef(null)
@@ -35,10 +34,7 @@ const PracticeScreen = () => {
 
   const handlePlay = async () => {
     setIsLoadingText(true)
-    const content = await getText(signal, {
-      minLength: sessionProgress.current.length,
-      maxLength: sessionProgress.current.length + 25
-    })
+    const content = await getText(signal, sessionProgress.current.length)
     setText(content)
     setIsLoadingText(false)
     setIsPlaying(true)
@@ -47,16 +43,16 @@ const PracticeScreen = () => {
   const handleRestart = () => {
     const improvement = wpm - sessionProgress.current.wpm
     if (!sessionProgress.current.wpm && improvement > 3)
-      sessionProgress.current.length += 50
+      sessionProgress.current.length += 2
     else if (improvement > 3)
-      sessionProgress.current.length += 25
+      sessionProgress.current.length += 1
     else if (improvement < -5)
-      sessionProgress.current.length -= 25
+      sessionProgress.current.length -= 1
 
-    if (sessionProgress.current.length > 500)
-      sessionProgress.current.length = 500
-    else if (sessionProgress.current.length < 50)
-      sessionProgress.current.length = 50
+    if (sessionProgress.current.length > 10)
+      sessionProgress.current.length = 10
+    else if (sessionProgress.current.length < 1)
+      sessionProgress.current.length = 1
 
     sessionProgress.current.wpm = wpm
     startTime.current = 0
@@ -78,8 +74,6 @@ const PracticeScreen = () => {
     if (event.key === text[typed]) {
       setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
-      const audioFile = new Audio(typeSound)
-      audioFile.play()
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])

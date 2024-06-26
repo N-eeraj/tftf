@@ -1,9 +1,9 @@
-const getText = async (signal, options) => {
+const getText = async (signal, length) => {
   const dummyText = 'The quick brown fox jumps over the lazy dog.'
   try {
-    const response = await fetch(`https://api.quotable.io/random?minLength=${options?.minLength || 100}&maxLength=${options?.maxLength || 200}`, { signal })
-    const { content } = await response.json()
-    return content
+    const response = await fetch(`http://metaphorpsum.com/sentences/${length}`, { signal })
+    const text = await response.text()
+    return text
   }
   catch (error) {
     console.warn(error)
