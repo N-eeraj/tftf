@@ -3,7 +3,7 @@ import { useSearchParams } from 'react-router-dom'
 import { useSnackbar } from 'react-simple-snackbar'
 import getText from '@utils/getText'
 import Button from '@components/base/button'
-import { RaceContext } from '@components/RaceContextProvider'
+import { TypingContext } from '@contexts/Typing'
 import PlayerInfo from '@components/game/PlayerInfo'
 
 const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, onJoin, onStart }) => {
@@ -36,7 +36,7 @@ const Organize = ({ hostConnection, clientConnection, peerId, isHost, onHost, on
     localStorage.setItem('playerCar', carIndex)
   }
 
-  const { setText } = useContext(RaceContext)
+  const { setText } = useContext(TypingContext)
 
   const handlePeerIdClick = () => {
     navigator.clipboard.writeText(peerId)

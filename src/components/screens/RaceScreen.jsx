@@ -1,6 +1,6 @@
 import { useState, useContext, useEffect } from 'react'
 import Text from '@components/game/Text'
-import { RaceContext } from '@components/RaceContextProvider'
+import { TypingContext } from '@contexts/Typing'
 
 const RaceScreen = ({ raceData, onKeyPress }) => {
   const [raceRankings, setRaceRankings] = useState(null)
@@ -12,7 +12,7 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
     setText,
     setTyped,
     setKeysPressed,
-  } = useContext(RaceContext)
+  } = useContext(TypingContext)
 
   const raceCompleted = text.length == typed
 

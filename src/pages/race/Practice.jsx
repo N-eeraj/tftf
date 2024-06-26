@@ -1,11 +1,11 @@
 import PracticeScreen from '@components/screens/PracticeScreen'
-import RaceContextProvider from '@components/RaceContextProvider'
+import TypingContextProvider from '@contexts/Typing'
 
 const Practice = () => {
   return (
-    <RaceContextProvider>
+    <TypingContextProvider>
       <PracticeScreen />
-    </RaceContextProvider>
+    </TypingContextProvider>
   )
 }
 

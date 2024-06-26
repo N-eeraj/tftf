@@ -1,8 +1,8 @@
 import { useState, createContext } from 'react'
 
-export const RaceContext = createContext()
+export const TypingContext = createContext()
 
-const RaceContextProvider = ({ children }) => {
+const TypingContextProvider = ({ children }) => {
   const [text, setText] = useState('')
   const [typed, setTyped] = useState(0)
   const [keysPressed, setKeysPressed] = useState([])
@@ -17,10 +17,10 @@ const RaceContextProvider = ({ children }) => {
   }
 
   return (
-    <RaceContext.Provider value={allValues}>
+    <TypingContext.Provider value={allValues}>
       {children}
-    </RaceContext.Provider>
+    </TypingContext.Provider>
   )
 }
 
-export default RaceContextProvider
+export default TypingContextProvider

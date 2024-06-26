@@ -142,7 +142,7 @@ const Canvas = ({ peerId, connections, started }) => {
 
   return (
     <>
-      <canvas ref={canvas} className='w-full border border-black' />
+      <canvas ref={canvas} className='w-full' />
       <div className='hidden'>
         <img ref={cars} src={carsImage} />
       </div>

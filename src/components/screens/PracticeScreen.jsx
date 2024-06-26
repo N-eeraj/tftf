@@ -3,7 +3,7 @@ import { useState, useContext, useEffect, useRef } from 'react'
 import Text from '@components/game/Text'
 import Button from '@components/base/button'
 import LabelValue from '@components/LabelValue'
-import { RaceContext } from '@components/RaceContextProvider'
+import { TypingContext } from '@contexts/Typing'
 
 import getText from '@utils/getText'
 
@@ -30,7 +30,7 @@ const PracticeScreen = () => {
     setText,
     setTyped,
     setKeysPressed,
-  } = useContext(RaceContext)
+  } = useContext(TypingContext)
 
   const handlePlay = async () => {
     setIsLoadingText(true)
