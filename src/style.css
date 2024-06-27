@@ -5,5 +5,5 @@
 @tailwind utilities;
 
 body {
-  @apply bg-dark;
+  @apply bg-dark selection:bg-accent selection:text-dark;
 }

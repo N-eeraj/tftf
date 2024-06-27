@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect, useContext } from 'react'
-import { RaceContext } from '@components/RaceContextProvider'
+import { TypingContext } from '@contexts/Typing'
 import typeSound from '@sounds/type.wav'
 
 const Text = ({ capsOn, className }) => {
@@ -13,7 +13,7 @@ const Text = ({ capsOn, className }) => {
     text,
     typed,
     keysPressed,
-  } = useContext(RaceContext)
+  } = useContext(TypingContext)
 
   const letterClass = index => {
     if (index < typed)

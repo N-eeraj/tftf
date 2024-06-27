@@ -1,17 +1,19 @@
+import { useRef, useContext } from 'react'
+import { ProfileContext } from '@contexts/Profile'
 import carsList from '@utils/carImages'
 
-const PlayerInfo = ({name, car, onNameChange, onCarChange}) => {
+const findPlayerCar = playerCar => carsList[playerCar]
+
+const PlayerInfo = () => {
+  const { playerName, playerCar } = useContext(ProfileContext)
+  const carImage = useRef(findPlayerCar(playerCar))
+
   return (
-    <div className='flex flex-col justify-center items-center gap-4 w-full'>
-      <input value={name} placeholder='Your Name' className={`py-1 px-4 text-xl text-accent focus:text-black font-bold focus:font-normal text-center ${!name && 'border'} border-accent focus:border-2 outline-none rounded-md`} onChange={onNameChange} />
-      <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-x-6 gap-y-12 w-full'>
-        {carsList.map((image, index) => (
-          <label key={index} className={`h-32 p-4 rounded-md cursor-pointer ${car === index && 'outline outline-accent'}`}>
-            <img src={image} className='w-full h-full object-contain' />
-            <input type='radio' name='car' value={index} className='hidden' onChange={onCarChange} />
-          </label>
-        ))}
-      </div>
+    <div className='flex justify-between gap-x-12 max-w-lg px-12 py-16 bg-black/30 rounded-md'>
+      <h2 className='text-light/80 text-5xl'>
+        {playerName}
+      </h2>
+      <img src={carImage.current} className='w-52 mt-5 rotate-[30deg] drop-shadow-[0_0_25px_#50C87877]' />
     </div>
   )
 }

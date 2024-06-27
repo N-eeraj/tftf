@@ -1,9 +1,11 @@
 import { useState, useContext, useEffect } from 'react'
 import Text from '@components/game/Text'
-import { RaceContext } from '@components/RaceContextProvider'
+import RankList from '@components/game/RankList'
+import { TypingContext } from '@contexts/Typing'
+import { RaceContext } from '@contexts/Race'
 
-const RaceScreen = ({ raceData, onKeyPress }) => {
-  const [raceRankings, setRaceRankings] = useState(null)
+const RaceView = () => {
+  const [ranking, setRanking] = useState(null)
   const [capsOn, setCapsOn] = useState(false)
   const {
     text,
@@ -12,8 +14,15 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
     setText,
     setTyped,
     setKeysPressed,
+  } = useContext(TypingContext)
+  const {
+    mainData,
+    connections,
+    peerId,
+    updateProgress,
   } = useContext(RaceContext)
 
+  const raceData = { ...mainData, connections, peerId }
   const raceCompleted = text.length == typed
 
   const handleKeyPress = (event) => {
@@ -22,7 +31,7 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
     if (event.key === text[typed]) {
       setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
-      onKeyPress(typed + 1)
+      updateProgress(typed + 1)
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
@@ -40,7 +49,6 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
   useEffect(() => {
     if (raceCompleted) {
       document.removeEventListener('keypress', handleKeyPress)
-      // console.log(keysPressed)
     }
   }, [keysPressed])
 
@@ -52,7 +60,7 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
   useEffect(() => {
     if (raceData.connections[raceData.peerId].progress !== 1)
       return
-    setRaceRankings(
+    setRanking(
       Object.entries(raceData.connections).sort(([_, a], [__, b]) => {
         if (a.progress > b.progress) return -1
         if (a.progress < b.progress) return 1
@@ -71,14 +79,8 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
   }, [raceData.connections])
 
   return (
-    <>
-    {
-      raceRankings ?
-        JSON.stringify(raceRankings) :
-        <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
-      }
-    </>
+    ranking ? <RankList ranking={ranking} /> : <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
   )
 }
 
-export default RaceScreen
+export default RaceView

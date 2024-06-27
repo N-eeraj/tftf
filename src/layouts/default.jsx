@@ -1,5 +1,6 @@
 import { Outlet } from 'react-router-dom'
 import SnackbarProvider from 'react-simple-snackbar'
+import ProfileContextProvider from '@contexts/Profile'
 
 import Navbar from '@components/Navbar'
 
@@ -10,7 +11,9 @@ const defaultLayout = () => {
       <SnackbarProvider>
         <Navbar />
         <main className='h-[calc(100vh-96px)] mt-24 overflow-y-visible'>
-          <Outlet />
+          <ProfileContextProvider>
+            <Outlet />
+          </ProfileContextProvider>
         </main>
       </SnackbarProvider>
     </>

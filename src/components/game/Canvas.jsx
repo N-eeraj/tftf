@@ -1,7 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useContext } from 'react'
+import { RaceContext } from '@contexts/Race'
 import carsImage from '@images/car-sprites.png'
 
-const Canvas = ({ peerId, connections, started }) => {
+const Canvas = () => {
+  const { peerId, connections, mainData } = useContext(RaceContext)
+  const started = !!mainData.data
+
   const dashesConfig = {
     width: 75,
     height: 8,
@@ -54,7 +58,7 @@ const Canvas = ({ peerId, connections, started }) => {
         else if (progress === 1) {
           if (self.lastUpdated > lastUpdated) {
             lineUp.current[lineUpIndex].completed = true
-            dx = canvas.current.width / 2
+            dx = canvas.current.width / 3
           }
           else {
             if (completed && carPosition < canvas.current.width / 3) {
@@ -142,7 +146,7 @@ const Canvas = ({ peerId, connections, started }) => {
 
   return (
     <>
-      <canvas ref={canvas} className='w-full border border-black' />
+      <canvas ref={canvas} className='w-full' />
       <div className='hidden'>
         <img ref={cars} src={carsImage} />
       </div>
