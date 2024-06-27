@@ -1,7 +1,11 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useContext } from 'react'
+import { RaceContext } from '@contexts/Race'
 import carsImage from '@images/car-sprites.png'
 
-const Canvas = ({ peerId, connections, started }) => {
+const Canvas = () => {
+  const { peerId, connections, mainData } = useContext(RaceContext)
+  const started = !!mainData.data
+
   const dashesConfig = {
     width: 75,
     height: 8,

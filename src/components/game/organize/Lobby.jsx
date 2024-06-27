@@ -1,13 +1,20 @@
 import { useContext, useEffect, useRef } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
+import { ProfileContext } from '@contexts/Profile'
+import { RaceContext } from '@contexts/Race'
 import PlayerInfo from '@components/game/PlayerInfo'
 import Button from '@components/base/button'
-import { ProfileContext } from '@contexts/Profile'
 import { useSnackbar } from 'react-simple-snackbar'
 
-const Lobby = ({ clientConnection, hostConnection, onJoin, onHost }) => {
+const Lobby = () => {
   const hostIdInput = useRef('')
   const { playerName, playerCar } = useContext(ProfileContext)
+  const {
+    hostConnection,
+    clientConnection,
+    host,
+    connect,
+  } = useContext(RaceContext)
 
   const navigate = useNavigate()
   const [query] = useSearchParams()
@@ -30,7 +37,8 @@ const Lobby = ({ clientConnection, hostConnection, onJoin, onHost }) => {
 
   const handleJoin = event => {
     event.preventDefault()
-    onJoin(hostIdInput.current.value, { playerName, playerCar })
+    const hostId = hostIdInput.current.value.trim()
+    hostId && connect(hostId, { playerName, playerCar })
   }
 
   useEffect(() => {
@@ -42,7 +50,7 @@ const Lobby = ({ clientConnection, hostConnection, onJoin, onHost }) => {
     <div className='flex flex-col items-center gap-y-4'>
       <PlayerInfo />
 
-      <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-accent text-white' onClick={onHost}>
+      <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-accent text-white' onClick={() => host({ playerName, playerCar })}>
         Host
       </Button>
       <span>

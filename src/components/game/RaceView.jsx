@@ -1,8 +1,9 @@
 import { useState, useContext, useEffect } from 'react'
 import Text from '@components/game/Text'
 import { TypingContext } from '@contexts/Typing'
+import { RaceContext } from '@contexts/Race'
 
-const RaceScreen = ({ raceData, onKeyPress }) => {
+const RaceView = () => {
   const [raceRankings, setRaceRankings] = useState(null)
   const [capsOn, setCapsOn] = useState(false)
   const {
@@ -13,7 +14,14 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
     setTyped,
     setKeysPressed,
   } = useContext(TypingContext)
+  const {
+    mainData,
+    connections,
+    peerId,
+    updateProgress,
+  } = useContext(RaceContext)
 
+  const raceData = { ...mainData, connections, peerId }
   const raceCompleted = text.length == typed
 
   const handleKeyPress = (event) => {
@@ -22,7 +30,7 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
     if (event.key === text[typed]) {
       setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
-      onKeyPress(typed + 1)
+      updateProgress(typed + 1)
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
@@ -72,13 +80,12 @@ const RaceScreen = ({ raceData, onKeyPress }) => {
 
   return (
     <>
-    {
-      raceRankings ?
-        JSON.stringify(raceRankings) :
-        <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
+      { raceRankings ?
+          JSON.stringify(raceRankings) :
+          <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
       }
     </>
   )
 }
 
-export default RaceScreen
+export default RaceView
