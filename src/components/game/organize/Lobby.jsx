@@ -3,6 +3,7 @@ import { useSnackbar } from 'react-simple-snackbar'
 import { RaceContext } from '@contexts/Race'
 import { TypingContext } from '@contexts/Typing'
 import Button from '@components/base/button'
+import ShareIcon from '@icons/Share'
 import getText from '@utils/getText'
 
 const Lobby = () => {
@@ -40,6 +41,19 @@ const Lobby = () => {
     openSnackbar('Copied to Host ID to Clipboard', 2000)
   }
 
+  const handleShare = async () => {
+    if (navigator.share) {
+      const shareData = {
+          title: 'Type Fast Type Furious',
+          text: 'Join in a race with me',
+          url: `race?hostId=${peerId}`,
+      }
+      await navigator.share(shareData)
+    }
+    else
+      handlePeerIdClick()
+  }
+
   useEffect(() => {
     return () => {
       controller.abort()
@@ -49,14 +63,17 @@ const Lobby = () => {
   return (
     isHost.current ?
       <div className='flex flex-col items-center gap-y-2'>
-        <span className='cursor-pointer' onClick={handlePeerIdClick}>
-          Join with {peerId}
-        </span>
+        <div className='flex items-center gap-x-2'>
+          <span className='text-light cursor-pointer' onClick={handlePeerIdClick}>
+            Join with {peerId}
+          </span>
+          <ShareIcon className='w-6 fill-accent cursor-pointer' onClick={handleShare} />
+        </div>
         <Button loading={loading} autoFocus className='col-span-2 bg-accent text-white' onClick={handlePlay}>
           Start Race
         </Button>
       </div> :
-      <p>
+      <p className='text-light'>
         Please wait while host starts the race
       </p>
   )

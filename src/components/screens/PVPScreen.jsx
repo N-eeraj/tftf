@@ -9,12 +9,13 @@ const PVPScreen = () => {
   const { peerId, mainData } = useContext(RaceContext)
 
   return (
-    <div className='flex flex-col gap-y-5 p-5'>
-      { peerId && <Canvas /> }
-
-      { mainData.data ?
-          <RaceView /> :
-          peerId ? <Lobby /> : <Entry />
+    <div className={`flex ${mainData.data || !peerId ? 'flex-col h-full' : 'flex-col-reverse'} gap-y-8 p-5`}>
+      { peerId ?
+          <>
+            <Canvas />
+            { mainData.data ? <RaceView /> : <Lobby /> }
+          </> :
+          <Entry />
       }
     </div>
   )

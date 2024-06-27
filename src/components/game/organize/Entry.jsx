@@ -47,21 +47,26 @@ const Entry = () => {
   }, [])
 
   return (
-    <div className='flex flex-col items-center gap-y-4'>
+    <div className='flex max-lg:flex-col justify-evenly items-center h-5/6'>
       <PlayerInfo />
 
-      <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-accent text-white' onClick={() => host({ playerName, playerCar })}>
-        Host
-      </Button>
-      <span>
-        OR
-      </span>
-      <form className='flex gap-x-4' onSubmit={handleJoin}>
-        <Input value={hostId} required placeholder='Enter Host Id' disabled={hostConnection || clientConnection} onChange={setHostId} onBlur={setHostId} />
-        <Button disabled={hostConnection} loading={clientConnection} className='w-32 bg-accent text-white'>
-          Join
+      <fieldset className='flex flex-col items-center gap-y-6 p-8 bg-black/20 border border-accent/50 rounded-md'>
+        <legend className='px-2 text-accent font-extralight'>
+          Start Racing
+        </legend>
+        <Button disabled={clientConnection} loading={hostConnection} className='w-32 bg-accent text-white' onClick={() => host({ playerName, playerCar })}>
+          Host
         </Button>
-      </form>
+        <span className='relative px-2 text-light text-xl before:absolute before:top-1/2 before:left-0 before:w-12 before:h-[3px] before:bg-light/50 before:rounded-full before:-translate-y-1/2 before:-translate-x-full after:absolute after:top-1/2 after:right-0 after:w-12 after:h-[3px] after:bg-light/50 after:rounded-full after:-translate-y-1/2 after:translate-x-full'>
+          OR
+        </span>
+        <form className='flex gap-x-4' onSubmit={handleJoin}>
+          <Input value={hostId} required placeholder='Enter Host Id' disabled={hostConnection || clientConnection} onChange={setHostId} onBlur={setHostId} />
+          <Button disabled={hostConnection} loading={clientConnection} className='w-32 bg-accent text-white'>
+            Join
+          </Button>
+        </form>
+      </fieldset>
     </div>
   )
 }
