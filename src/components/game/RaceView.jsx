@@ -1,10 +1,11 @@
 import { useState, useContext, useEffect } from 'react'
 import Text from '@components/game/Text'
+import RankList from '@components/game/RankList'
 import { TypingContext } from '@contexts/Typing'
 import { RaceContext } from '@contexts/Race'
 
 const RaceView = () => {
-  const [raceRankings, setRaceRankings] = useState(null)
+  const [ranking, setRanking] = useState(null)
   const [capsOn, setCapsOn] = useState(false)
   const {
     text,
@@ -48,7 +49,6 @@ const RaceView = () => {
   useEffect(() => {
     if (raceCompleted) {
       document.removeEventListener('keypress', handleKeyPress)
-      // console.log(keysPressed)
     }
   }, [keysPressed])
 
@@ -60,7 +60,7 @@ const RaceView = () => {
   useEffect(() => {
     if (raceData.connections[raceData.peerId].progress !== 1)
       return
-    setRaceRankings(
+    setRanking(
       Object.entries(raceData.connections).sort(([_, a], [__, b]) => {
         if (a.progress > b.progress) return -1
         if (a.progress < b.progress) return 1
@@ -79,12 +79,7 @@ const RaceView = () => {
   }, [raceData.connections])
 
   return (
-    <>
-      { raceRankings ?
-          JSON.stringify(raceRankings) :
-          <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
-      }
-    </>
+    ranking ? <RankList ranking={ranking} /> : <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
   )
 }
 
