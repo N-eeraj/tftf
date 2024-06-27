@@ -54,7 +54,7 @@ const Canvas = ({ peerId, connections, started }) => {
         else if (progress === 1) {
           if (self.lastUpdated > lastUpdated) {
             lineUp.current[lineUpIndex].completed = true
-            dx = canvas.current.width / 2
+            dx = canvas.current.width / 3
           }
           else {
             if (completed && carPosition < canvas.current.width / 3) {
