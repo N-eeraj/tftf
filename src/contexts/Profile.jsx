@@ -3,20 +3,34 @@ import { setStorage, getStorage } from '@utils/storage'
 
 export const ProfileContext = createContext()
 
-const soundReducer = (state, action) => {
-
+const soundReducer = (sounds, action) => {
+  switch(action) {
+    case 'toggleTyping':
+      return {
+        ...sounds,
+        typing: !sounds.typing,
+      }
+    case 'toggleBackground':
+      return {
+        ...sounds,
+        background: !sounds.background,
+      }
+    default:
+      console.warn('Invalid Sound Update')
+      return sounds
+  }
 }
 
-const soundInit = {
+const soundsInit = {
   typing: true,
-  music: true,
+  background: true,
 }
 
 const ProfileContextProvider = ({ children }) => {
   const [previousPlayerName, setPreviousPlayerName] = useState(getStorage('playerName', ''))
   const [playerName, setPlayerName] = useState(previousPlayerName)
   const [playerCar, setPlayerCar] = useState(getStorage('playerCar', 0))
-  const [sounds, updateSound] = useReducer(soundReducer, localStorage.getItem('sound') ?? soundInit)
+  const [sounds, updateSound] = useReducer(soundReducer, getStorage('sounds', soundsInit))
 
   useEffect(() => {
     setStorage('playerName', previousPlayerName)
@@ -25,6 +39,10 @@ const ProfileContextProvider = ({ children }) => {
   useEffect(() => {
     setStorage('playerCar', playerCar)
   }, [playerCar])
+
+  useEffect(() => {
+    setStorage('sounds', sounds)
+  }, [sounds])
 
   const allValues = {
     playerName,
