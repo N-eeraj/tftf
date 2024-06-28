@@ -70,12 +70,13 @@ const RaceView = () => {
         if (a.lastUpdated > b.lastUpdated) return 1
         return 0
       })
-      .map(([key, { progress, playerInfo, lastUpdated, accuracy }]) => {
+      .map(([key, { progress, playerName, playerCar, lastUpdated, accuracy }]) => {
         return {
           key,
           wpm: Math.round(correctTyped / (lastUpdated / 12000) || 0),
           accuracy,
-          ...playerInfo,
+          playerName,
+          playerCar,
           progress: (progress * 100).toFixed(2),
         }
       })

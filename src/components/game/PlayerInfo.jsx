@@ -1,8 +1,6 @@
 import { useRef, useContext } from 'react'
 import { ProfileContext } from '@contexts/Profile'
-import carsList from '@utils/carImages'
-
-const findPlayerCar = playerCar => carsList[playerCar]
+import { findPlayerCar } from '@utils/carImages'
 
 const PlayerInfo = () => {
   const { playerName, playerCar } = useContext(ProfileContext)

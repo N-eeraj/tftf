@@ -7,7 +7,7 @@ import miniVan from '@images/cars/mini-van.png'
 import police from '@images/cars/police.png'
 import taxi from '@images/cars/taxi.png'
 
-export default [
+const carsList = [
   taxi,
   miniVan,
   miniTruck,
@@ -17,3 +17,7 @@ export default [
   blackViper,
   audi,
 ]
+
+export const findPlayerCar = carIndex => carsList[carIndex]
+
+export default carsList
