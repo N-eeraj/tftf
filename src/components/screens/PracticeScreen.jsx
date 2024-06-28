@@ -8,9 +8,6 @@ import { TypingContext } from '@contexts/Typing'
 import getText from '@utils/getText'
 
 const PracticeScreen = () => {
-  const controller = new AbortController()
-  const signal = controller.signal
-
   const [isPlaying, setIsPlaying] = useState(false)
   const [isIsLoadingText, setIsLoadingText] = useState(false)
   const [timeElapsed, setTimeElapsed] = useState(0)
@@ -18,7 +15,7 @@ const PracticeScreen = () => {
 
   const sessionProgress = useRef({
     wpm: 0,
-    length: 2
+    length: 20,
   })
   const startTime = useRef(0)
   const stopWatch = useRef(null)
@@ -34,7 +31,10 @@ const PracticeScreen = () => {
 
   const handlePlay = async () => {
     setIsLoadingText(true)
-    const content = await getText(signal, sessionProgress.current.length)
+    const content = await getText({
+      min: sessionProgress.current.length,
+      max: sessionProgress.current.length + 5
+    })
     setText(content)
     setIsLoadingText(false)
     setIsPlaying(true)
@@ -43,16 +43,16 @@ const PracticeScreen = () => {
   const handleRestart = () => {
     const improvement = wpm - sessionProgress.current.wpm
     if (!sessionProgress.current.wpm && improvement > 3)
-      sessionProgress.current.length += 2
+      sessionProgress.current.length += 10
     else if (improvement > 3)
-      sessionProgress.current.length += 1
+      sessionProgress.current.length += 5
     else if (improvement < -5)
-      sessionProgress.current.length -= 1
+      sessionProgress.current.length -= 5
 
-    if (sessionProgress.current.length > 10)
+    if (sessionProgress.current.length > 100)
+      sessionProgress.current.length = 100
+    else if (sessionProgress.current.length < 10)
       sessionProgress.current.length = 10
-    else if (sessionProgress.current.length < 1)
-      sessionProgress.current.length = 1
 
     sessionProgress.current.wpm = wpm
     startTime.current = 0
@@ -97,13 +97,6 @@ const PracticeScreen = () => {
   useEffect(() => {
     if (isPlaying && typed === text.length) clearEvents()
   }, [keysPressed])
-
-  useEffect(() => {
-    return () => {
-      controller.abort()
-      clearEvents()
-    }
-  }, [])
 
   const correctTyped = keysPressed.filter(correct => correct).length || 0
   const accuracy = (correctTyped * 100 / keysPressed.length || 0).toFixed(2)

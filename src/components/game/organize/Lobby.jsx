@@ -15,9 +15,6 @@ const Lobby = () => {
 
   const [loading, setLoading] = useState(false)
 
-  const controller = new AbortController()
-  const signal = controller.signal
-
   const [openSnackbar] = useSnackbar({
     style: {
       borderRadius: '50px'
@@ -31,7 +28,7 @@ const Lobby = () => {
 
   const handlePlay = async () => {
     setLoading(true)
-    const content = await getText(signal, 3)
+    const content = await getText({ min: 30, max: 50 })
     stopConnections(content)
     setText(content)
   }
@@ -53,12 +50,6 @@ const Lobby = () => {
     else
       handlePeerIdClick()
   }
-
-  useEffect(() => {
-    return () => {
-      controller.abort()
-    }
-  }, [])
 
   return (
     isHost.current ?
