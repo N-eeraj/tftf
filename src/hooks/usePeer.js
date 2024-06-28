@@ -25,6 +25,7 @@ const usePeer = () => {
           [data.from]: {
             lastUpdated: 0,
             progress: 0,
+            accuracy: 100,
             index: Object.keys(connections).length,
             ...data.playerInfo
           }
@@ -63,6 +64,7 @@ const usePeer = () => {
           [hostId]: {
             lastUpdated: 0,
             progress: 0,
+            accuracy: 100,
             index: 0,
             ...playerInfo,
           }
@@ -151,11 +153,12 @@ const usePeer = () => {
     })
   }
 
-  const updateProgress = text => {
+  const updateProgress = (completed, accuracy) => {
     const data = {
       ...connections[peerId],
       lastUpdated: Date.now() - mainData.start,
-      progress: text / mainData.data.length,
+      progress: completed / mainData.data.length,
+      accuracy,
       index: connections[peerId].index,
     }
     setConnections({

@@ -24,6 +24,7 @@ const RaceView = () => {
 
   const raceData = { ...mainData, connections, peerId }
   const raceCompleted = text.length == typed
+  const correctTyped = keysPressed.filter(correct => correct).length || 0
 
   const handleKeyPress = (event) => {
     setCapsOn(event.getModifierState('CapsLock'))
@@ -31,7 +32,6 @@ const RaceView = () => {
     if (event.key === text[typed]) {
       setTyped(prevTyped => ++prevTyped)
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, true])
-      updateProgress(typed + 1)
     }
     else
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
@@ -47,6 +47,8 @@ const RaceView = () => {
   }, [text, typed])
 
   useEffect(() => {
+    const accuracy = +(correctTyped * 100 / keysPressed.length || 0).toFixed(2)
+    updateProgress(typed, accuracy)
     if (raceCompleted) {
       document.removeEventListener('keypress', handleKeyPress)
     }
@@ -68,9 +70,11 @@ const RaceView = () => {
         if (a.lastUpdated > b.lastUpdated) return 1
         return 0
       })
-      .map(([key, { progress, playerInfo }]) => {
+      .map(([key, { progress, playerInfo, lastUpdated, accuracy }]) => {
         return {
           key,
+          wpm: Math.round(correctTyped / (lastUpdated / 12000) || 0),
+          accuracy,
           ...playerInfo,
           progress: (progress * 100).toFixed(2),
         }
@@ -79,7 +83,9 @@ const RaceView = () => {
   }, [raceData.connections])
 
   return (
-    ranking ? <RankList ranking={ranking} /> : <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] m-auto' />
+    ranking ?
+      <RankList ranking={ranking} /> :
+      <Text capsOn={capsOn} className='w-full min-w-[720px] max-w-[1080px] min-h-[240px] mt-12 mx-auto' />
   )
 }
 
