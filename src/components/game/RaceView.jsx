@@ -68,11 +68,14 @@ const RaceView = () => {
         if (a.progress < b.progress) return 1
         if (a.lastUpdated < b.lastUpdated) return -1
         if (a.lastUpdated > b.lastUpdated) return 1
+        if (a.accuracy > b.accuracy) return -1
+        if (a.accuracy < b.accuracy) return 1
         return 0
       })
       .map(([key, { progress, playerName, playerCar, lastUpdated, accuracy }]) => {
         return {
           key,
+          isPlayer: key === peerId,
           wpm: Math.round(correctTyped / (lastUpdated / 12000) || 0),
           accuracy,
           playerName,
