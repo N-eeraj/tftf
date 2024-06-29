@@ -1,5 +1,6 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { TypingContext } from '@contexts/Typing'
+import { ProfileContext } from '@contexts/Profile'
 import typeSound from '@sounds/type.wav'
 
 const Text = ({ capsOn, className }) => {
@@ -14,6 +15,7 @@ const Text = ({ capsOn, className }) => {
     typed,
     keysPressed,
   } = useContext(TypingContext)
+  const { sounds } = useContext(ProfileContext)
 
   const letterClass = index => {
     if (index < typed)
@@ -27,7 +29,8 @@ const Text = ({ capsOn, className }) => {
     if (!typed || !container.current || !letters.current[typed]) return
     blink.current = false
     const blinker = setTimeout(() => blink.current = true, 3000)
-    audioFile.current.play()
+    if (sounds.typing)
+      audioFile.current.play()
 
     const { x: containerX, y: containerY } = container.current.getBoundingClientRect()
     const { x: lettersX, y: lettersY } = letters.current[typed].getBoundingClientRect()

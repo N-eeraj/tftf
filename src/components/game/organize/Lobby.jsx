@@ -28,7 +28,7 @@ const Lobby = () => {
 
   const handlePlay = async () => {
     setLoading(true)
-    const content = await getText({ min: 30, max: 50 })
+    const content = await getText({ min: 20, max: 30 })
     stopConnections(content)
     setText(content)
   }

@@ -43,11 +43,11 @@ const PracticeScreen = () => {
   const handleRestart = () => {
     const improvement = wpm - sessionProgress.current.wpm
     if (!sessionProgress.current.wpm && improvement > 3)
-      sessionProgress.current.length += 10
-    else if (improvement > 3)
       sessionProgress.current.length += 5
+    else if (improvement > 3)
+      sessionProgress.current.length += 3
     else if (improvement < -5)
-      sessionProgress.current.length -= 5
+      sessionProgress.current.length -= 3
 
     if (sessionProgress.current.length > 100)
       sessionProgress.current.length = 100
