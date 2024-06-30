@@ -10,7 +10,7 @@ const defaultLayout = () => {
     <>
       <SnackbarProvider>
         <Navbar />
-        <main className='h-[calc(100vh-96px)] mt-24 overflow-y-visible'>
+        <main className='h-[calc(100vh-96px)] mx-auto mt-24 overflow-y-visible'>
           <ProfileContextProvider>
             <Outlet />
           </ProfileContextProvider>

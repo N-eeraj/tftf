@@ -106,7 +106,7 @@ const PracticeScreen = () => {
   return (
     isPlaying ?
       <>
-        <div className='fixed top-[calc(50vh-50px)] left-1/2 flex flex-col justify-center items-center w-[90vw] min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
+        <div className='fixed top-[calc(50vh-50px)] left-1/2 flex flex-col justify-center items-center w-[90vw] md:min-w-[720px] max-w-7xl -translate-y-1/2 -translate-x-1/2'>
           <div className='flex justify-between w-full text-lg text-light/50'>
             <LabelValue label='Accuracy:' value={`${accuracy}%`} valueSize='text-3xl' />
             <LabelValue label='WPM' value={wpm} reverse valueSize='text-3xl' />

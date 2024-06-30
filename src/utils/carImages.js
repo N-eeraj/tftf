@@ -20,4 +20,6 @@ const carsList = [
 
 export const findPlayerCar = carIndex => carsList[carIndex]
 
+export const randomCar = carsList[Math.floor(Math.random() * carsList.length)]
+
 export default carsList
