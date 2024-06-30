@@ -1,14 +1,14 @@
 import { useRef, useState, useEffect, useContext } from 'react'
 import { TypingContext } from '@contexts/Typing'
 import { ProfileContext } from '@contexts/Profile'
-import typeSound from '@sounds/type.wav'
+import typingSound from '@sounds/type.wav'
 
 const Text = ({ capsOn, className }) => {
   const container = useRef(null)
   const letters = useRef([])
   const blink = useRef(true)
   const [caretCoords, setCaretCoords] = useState({ x: -2, y: 0 })
-  const audioFile = useRef(new Audio(typeSound))
+  const typingAudio = useRef(new Audio(typingSound))
 
   const {
     text,
@@ -30,7 +30,7 @@ const Text = ({ capsOn, className }) => {
     blink.current = false
     const blinker = setTimeout(() => blink.current = true, 3000)
     if (sounds.typing)
-      audioFile.current.play()
+      typingAudio.current.play()
 
     const { x: containerX, y: containerY } = container.current.getBoundingClientRect()
     const { x: lettersX, y: lettersY } = letters.current[typed].getBoundingClientRect()
@@ -41,7 +41,7 @@ const Text = ({ capsOn, className }) => {
 
     return () => {
       clearTimeout(blinker)
-      audioFile.current.currentTime = 0
+      typingAudio.current.currentTime = 0
     }
   }, [typed])
 

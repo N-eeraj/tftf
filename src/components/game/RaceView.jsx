@@ -1,8 +1,10 @@
-import { useState, useContext, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import Text from '@components/game/Text'
 import RankList from '@components/game/RankList'
 import { TypingContext } from '@contexts/Typing'
 import { RaceContext } from '@contexts/Race'
+import { ProfileContext } from '@contexts/Profile'
+import carSound from '@sounds/car.mp3'
 
 const RaceView = () => {
   const [ranking, setRanking] = useState(null)
@@ -21,6 +23,7 @@ const RaceView = () => {
     peerId,
     updateProgress,
   } = useContext(RaceContext)
+  const { sounds } = useContext(ProfileContext)
 
   const raceData = { ...mainData, connections, peerId }
   const raceCompleted = text.length == typed
@@ -37,6 +40,7 @@ const RaceView = () => {
       setKeysPressed(prevKeysPressed => [...prevKeysPressed, false])
     event.preventDefault()
   }
+
 
   useEffect(() => {
     if (text)
@@ -85,6 +89,18 @@ const RaceView = () => {
       })
     )
   }, [raceData.connections])
+
+  useEffect(() => {
+    if (!ranking && sounds.background) {
+      const carAudio = new Audio(carSound)
+      carAudio.loop = true
+      carAudio.play()
+
+      return () => {
+        carAudio.pause()
+      }
+    }
+  }, [ranking])
 
   return (
     ranking ?
